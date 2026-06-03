@@ -1,12 +1,14 @@
 package main
 
 import (
-	m "cars/models"
-	"encoding/json"
+	//"bytes"
+	//m "cars/models"
+	//"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
-	"os"
+	//"strings"
 )
 
 func main() {
@@ -23,21 +25,47 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func dataHandler(w http.ResponseWriter, r *http.Request) {
-	file, err := os.Open("api/data.json")
+	resp, err := http.Get("http://localhost:3000/api/models")
 	if err != nil {
-		http.Error(w, "file not found", http.StatusInternalServerError)
-		return
+		panic(err)
 	}
-	defer file.Close()
+	defer resp.Body.Close()
 
-	var data m.CarsAPI
-
-	err = json.NewDecoder(file).Decode(&data)
+	info, err := io.ReadAll(resp.Body)
 	if err != nil {
-		http.Error(w, "bad json", http.StatusInternalServerError)
-		return
+		panic(err)
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(data)
+	fmt.Println(string(info))
+
+	// 	var data m.CarsAPI
+
+	// 	json.Unmarshal(info, &data)
+
+	// 	// err = json.NewDecoder(resp.Body).Decode(&data)
+	// 	// if err != nil {
+	// 	// 	http.Error(w, "bad json", http.StatusInternalServerError)
+	// 	// 	return
+	// 	// }
+
+	// 	//w.Header().Set("Content-Type", "application/json")
+	// 	//json.NewEncoder(w).Encode(data)
+
+	// 	data1, _ := json.Marshal(data)
+
+	// 	resp2, err := http.Post(
+	// 		"http://localhost:8080/api/cars",
+	// 		"application/json",
+	// 		bytes.NewBuffer(data1),
+	// 	)
+	// 	if err != nil {
+	// 		panic(err)
+	// 	}
+	// 	defer resp2.Body.Close()
+
+	//	for _, car := range data1 {
+	//		go func(c m.CarsAPI) {
+	//			sendToServer(c)
+	//		}(data)
+	//	}
 }
