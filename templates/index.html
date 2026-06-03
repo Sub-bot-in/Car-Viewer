@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+    </head>
+    <body>
+        <h1>Welcome to HiveCars</h1>
+
+        {{range .Cars}}
+            <div>
+                <h2>{{.Name}}</h2>
+                <p>Id: {{.ID}}</p>
+                <p>Year: {{.Year}}</p>
+                <p>Manufacturer ID: {{.ManufacturerID}}</p>
+                <p>Category ID: {{.CategoryID}}</p>
+                <p>Engine: {{.Specifications.Engine}}</p>
+                <p>Horsepower: {{.Specifications.Horsepower}}</p>
+                <p>Transmission: {{.Specifications.Transmission}}</p>
+                <p>Drivetrain: {{.Specifications.Drivetrain}}</p>
+                <p>Image: {{.Image}}</p>
+            </div>
+        {{end}}
+    </body>
+    </html>
