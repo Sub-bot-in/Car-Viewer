@@ -1,24 +1,12 @@
-package models
+package catalog
 
 type CarsAPI struct {
-	Manufacturers []Manufacturer `json:"manufacturers"`
-	Categories    []Category     `json:"categories"`
-	CarModels     []CarModel     `json:"carModels"`
+	Models        []Model         `json:"models"`
+	Manufacturers []Manufacturers `json:"manufacturers"`
+	Categories    []Categories    `json:"categories"`
 }
 
-type Manufacturer struct {
-	ID           int    `json:"id"`
-	Name         string `json:"name"`
-	Country      string `json:"country"`
-	FoundingYear int    `json:"foundingYear"`
-}
-
-type Category struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-}
-
-type CarModel struct {
+type Model struct {
 	ID             int            `json:"id"`
 	Name           string         `json:"name"`
 	ManufacturerID int            `json:"manufacturerId"`
@@ -33,4 +21,16 @@ type Specifications struct {
 	Horsepower   int    `json:"horsepower"`
 	Transmission string `json:"transmission"`
 	Drivetrain   string `json:"drivetrain"`
+}
+
+type Manufacturers struct {
+	ID           int    `json:"id"`
+	Name         string `json:"name"`
+	Country      string `json:"country"`
+	FoundingYear int    `json:"foundingYear"`
+}
+
+type Categories struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
 }
