@@ -1,6 +1,7 @@
 package main
 
 import (
+	m "cars/models"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -18,7 +19,7 @@ func main() {
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("API carshttp://localhost:8080/api/cars"))
+	w.Write([]byte("API cars http://localhost:8080/api/cars"))
 }
 
 func dataHandler(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +30,7 @@ func dataHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	var data CarsAPI
+	var data m.CarsAPI
 
 	err = json.NewDecoder(file).Decode(&data)
 	if err != nil {
