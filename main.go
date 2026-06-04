@@ -13,7 +13,7 @@ func main() {
 
 	http.HandleFunc("/", homeHandler)
 	http.HandleFunc("/cars", carsHandler)
-	http.HandleFunc("/spec/", specHandler)
+	http.HandleFunc("/specifications/", specHandler)
 
 	fmt.Println("Server started on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
@@ -61,7 +61,7 @@ type CarWithDetails struct {
 
 func specHandler(w http.ResponseWriter, r *http.Request) {
 
-	id := strings.TrimPrefix(r.URL.Path, "/spec/")
+	id := strings.TrimPrefix(r.URL.Path, "/specifications/")
 
 	data := loadCarsAPI()
 
