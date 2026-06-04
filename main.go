@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
 )
 
 func main() {
@@ -17,12 +18,13 @@ func main() {
 
 	http.HandleFunc("/", homeHandler)
 	http.HandleFunc("/cars", carsHandler)
+	http.HandleFunc("/spec/", specHandler)
 
 	fmt.Println("Server started on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-var tmpl *template.Template = template.Must(template.ParseFiles("templates/index.html"))
+var tmpl *template.Template = template.Must(template.ParseGlob("templates/*.html"))
 
 type PageData struct {
 	Cars []catalog.Model
@@ -49,4 +51,28 @@ func loadCarsAPI() catalog.CarsAPI {
 		Categories:    fetchCategories(),
 		Manufacturers: fetchManufacturers(),
 	}
+
+}
+
+func specHandler(w http.ResponseWriter, r *http.Request) {
+
+	id := strings.TrimPrefix(r.URL.Path, "/spec/")
+
+	data := loadCarsAPI()
+
+	var car catalog.Model
+
+	for _, c := range data.Models {
+		if fmt.Sprint(c.ID) == id {
+			car = c
+			break
+		}
+	}
+
+	err := tmpl.ExecuteTemplate(w, "car.html", car)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
 }

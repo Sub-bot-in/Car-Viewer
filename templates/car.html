@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+    </head>
+    <body>
+        <h1>
+          <a href="/">Home</a>
+        </h1>
+
+            <div>
+                <h2>{{.Name}}, {{.Year}}</h2>
+
+                  <img src="http://localhost:3000/api/images/{{.Image}}" width="800"/>
+
+                <p>Id: {{.ID}}</p>
+                <p>Engine: {{.Specifications.Engine}}</p>
+                <p>Horsepower: {{.Specifications.Horsepower}}</p>
+                <p>Transmission: {{.Specifications.Transmission}}</p>
+                <p>Drivetrain: {{.Specifications.Drivetrain}}</p>
+
+            </div>
+    </body>
+    </html>
