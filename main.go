@@ -11,11 +11,6 @@ import (
 
 func main() {
 
-	var data catalog.CarsAPI = loadCarsAPI()
-	fmt.Println(len(data.Models))
-	fmt.Println(len(data.Categories))
-	fmt.Println(len(data.Manufacturers))
-
 	http.HandleFunc("/", homeHandler)
 	http.HandleFunc("/cars", carsHandler)
 	http.HandleFunc("/spec/", specHandler)
@@ -27,14 +22,18 @@ func main() {
 var tmpl *template.Template = template.Must(template.ParseGlob("templates/*.html"))
 
 type PageData struct {
-	Cars []catalog.Model
+	Cars          []catalog.Model
+	Manufacturers []catalog.Manufacturers
+	Categories    []catalog.Categories
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	data := loadCarsAPI()
 
 	pageData := PageData{
-		Cars: data.Models,
+		Cars:          data.Models,
+		Manufacturers: data.Manufacturers,
+		Categories:    data.Categories,
 	}
 
 	tmpl.ExecuteTemplate(w, "index.html", pageData)
@@ -54,6 +53,12 @@ func loadCarsAPI() catalog.CarsAPI {
 
 }
 
+type CarWithDetails struct {
+	Car          catalog.Model
+	Manufacturer catalog.Manufacturers
+	Categorie    catalog.Categories
+}
+
 func specHandler(w http.ResponseWriter, r *http.Request) {
 
 	id := strings.TrimPrefix(r.URL.Path, "/spec/")
@@ -61,6 +66,8 @@ func specHandler(w http.ResponseWriter, r *http.Request) {
 	data := loadCarsAPI()
 
 	var car catalog.Model
+	var manufacturer catalog.Manufacturers
+	var categorie catalog.Categories
 
 	for _, c := range data.Models {
 		if fmt.Sprint(c.ID) == id {
@@ -69,10 +76,28 @@ func specHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	err := tmpl.ExecuteTemplate(w, "car.html", car)
+	for _, c := range data.Manufacturers {
+		if fmt.Sprint(c.ID) == id {
+			manufacturer = c
+			break
+		}
+	}
+
+	for _, c := range data.Categories {
+		if fmt.Sprint(c.ID) == id {
+			categorie = c
+			break
+		}
+	}
+
+	specPage := CarWithDetails{
+		Car:          car,
+		Manufacturer: manufacturer,
+		Categorie:    categorie,
+	}
+	err := tmpl.ExecuteTemplate(w, "car.html", specPage)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-
 }

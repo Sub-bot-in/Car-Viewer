@@ -7,15 +7,19 @@
         </h1>
 
             <div>
-                <h2>{{.Name}}, {{.Year}}</h2>
+                <h2>{{.Car.Name}}, {{.Car.Year}}</h2>
 
-                  <img src="http://localhost:3000/api/images/{{.Image}}" width="800"/>
+                  <img src="http://localhost:3000/api/images/{{.Car.Image}}" width="800"/>
 
-                <p>Id: {{.ID}}</p>
-                <p>Engine: {{.Specifications.Engine}}</p>
-                <p>Horsepower: {{.Specifications.Horsepower}}</p>
-                <p>Transmission: {{.Specifications.Transmission}}</p>
-                <p>Drivetrain: {{.Specifications.Drivetrain}}</p>
+                <p>Id: {{.Car.ID}}</p>
+                <p>Name: {{.Car.Name}}</p>
+                <p>Year: {{.Car.Year}}</p>
+                <p>Engine: {{.Car.Specifications.Engine}}</p>
+                <p>Horsepower: {{.Car.Specifications.Horsepower}}</p>
+                <p>Transmission: {{.Car.Specifications.Transmission}}</p>
+                <p>Drivetrain: {{.Car.Specifications.Drivetrain}}</p>
+                <p>Founding Year: {{.Manufacturer.FoundingYear}}</p>
+                <p>Country: {{.Manufacturer.Country}}</p>
 
             </div>
     </body>

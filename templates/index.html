@@ -6,7 +6,9 @@
 
         {{range .Cars}}
             <div>
-                <h2>{{.Name}}, {{.Year}}</h2>
+                <a href="http://localhost:8080/spec/{{.ID}}">
+                    <h2 href="http://localhost:8080/spec/{{.ID}}">{{.Name}}, {{.Year}}</h2>
+                </a>
                 <a href="http://localhost:8080/spec/{{.ID}}">
                   <img src="http://localhost:3000/api/images/{{.Image}}" width="400"/>
                 </a>
