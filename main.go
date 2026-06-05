@@ -56,7 +56,7 @@ func loadCarsAPI() catalog.CarsAPI {
 type CarWithDetails struct {
 	Car          catalog.Model
 	Manufacturer catalog.Manufacturers
-	Categorie    catalog.Categories
+	Category     catalog.Categories
 }
 
 func specHandler(w http.ResponseWriter, r *http.Request) {
@@ -67,7 +67,7 @@ func specHandler(w http.ResponseWriter, r *http.Request) {
 
 	var car catalog.Model
 	var manufacturer catalog.Manufacturers
-	var categorie catalog.Categories
+	var category catalog.Categories
 
 	for _, c := range data.Models {
 		if fmt.Sprint(c.ID) == id {
@@ -85,7 +85,7 @@ func specHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, c := range data.Categories {
 		if fmt.Sprint(c.ID) == id {
-			categorie = c
+			category = c
 			break
 		}
 	}
@@ -93,7 +93,7 @@ func specHandler(w http.ResponseWriter, r *http.Request) {
 	specPage := CarWithDetails{
 		Car:          car,
 		Manufacturer: manufacturer,
-		Categorie:    categorie,
+		Category:     category,
 	}
 	err := tmpl.ExecuteTemplate(w, "car.html", specPage)
 	if err != nil {
