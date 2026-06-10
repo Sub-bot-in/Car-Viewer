@@ -9,36 +9,45 @@ import (
 
 const baseURL = "http://localhost:3000/api"
 
-func fetchJSON(url string, target interface{}) {
+func fetchJSON(url string, target interface{}) error {
 	resp, err := http.Get(url)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		panic(fmt.Sprintf("bad status: %d", resp.StatusCode))
+		return fmt.Errorf("bad status: %d", resp.StatusCode)
 	}
 
 	err = json.NewDecoder(resp.Body).Decode(target)
 	if err != nil {
-		panic(err)
+		return err
 	}
 }
 
-func fetchModels() []catalog.Model {
+modelsCh := make(chan []catalog.Model)
+//brandsCh := make(chan []catalog.Brand)
+errCh := make(chan error)
+
+go fetchModels(modelsCh, errCh)
+
+func fetchModels(modelsCh, errCh) []catalog.Model {
 	var models []catalog.Model
-	fetchJSON(baseURL+"/models", &models)
-	return models
+	if err := fetchJSON(baseURL+"/models", &models); err != nil {
+		errCh <- err
+		return
+	}
+	modelsCh <- models
 }
 
-func fetchManufacturers() []catalog.Manufacturers {
+func fetchManufacturers(manufacturersCh, errCh) []catalog.Manufacturers {
 	var manufacturers []catalog.Manufacturers
 	fetchJSON(baseURL+"/manufacturers", &manufacturers)
 	return manufacturers
 }
 
-func fetchCategories() []catalog.Categories {
+func fetchCategories(categoriesCh, errCh) []catalog.Categories {
 	var categories []catalog.Categories
 	fetchJSON(baseURL+"/categories", &categories)
 	return categories
