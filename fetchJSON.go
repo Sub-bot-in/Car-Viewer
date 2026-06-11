@@ -1,7 +1,6 @@
 package main
 
 import (
-	"cars/catalog"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -24,31 +23,16 @@ func fetchJSON(url string, target interface{}) error {
 	if err != nil {
 		return err
 	}
+	return nil
 }
 
-modelsCh := make(chan []catalog.Model)
-//brandsCh := make(chan []catalog.Brand)
-errCh := make(chan error)
+func fetch[T any](url string, resultCh chan<- T, errCh chan<- error) {
+	var data T
 
-go fetchModels(modelsCh, errCh)
-
-func fetchModels(modelsCh, errCh) []catalog.Model {
-	var models []catalog.Model
-	if err := fetchJSON(baseURL+"/models", &models); err != nil {
+	if err := fetchJSON(url, &data); err != nil {
 		errCh <- err
 		return
 	}
-	modelsCh <- models
-}
 
-func fetchManufacturers(manufacturersCh, errCh) []catalog.Manufacturers {
-	var manufacturers []catalog.Manufacturers
-	fetchJSON(baseURL+"/manufacturers", &manufacturers)
-	return manufacturers
-}
-
-func fetchCategories(categoriesCh, errCh) []catalog.Categories {
-	var categories []catalog.Categories
-	fetchJSON(baseURL+"/categories", &categories)
-	return categories
+	resultCh <- data
 }

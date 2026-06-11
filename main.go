@@ -12,7 +12,7 @@ import (
 func main() {
 
 	http.HandleFunc("/", homeHandler)
-	http.HandleFunc("/cars", carsHandler)
+	//	http.HandleFunc("/cars", carsHandler)
 	http.HandleFunc("/specifications/", specHandler)
 
 	fmt.Println("Server started on http://localhost:8080")
@@ -28,29 +28,78 @@ type PageData struct {
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	data := loadCarsAPI()
 
-	pageData := PageData{
-		Cars:          data.Models,
-		Manufacturers: data.Manufacturers,
-		Categories:    data.Categories,
+	data := PageData{}
+
+	errCh := make(chan error, 3) // буфер важен!
+	doneCh := make(chan struct{}, 3)
+
+	go func() {
+		err := fetchJSON(baseURL+"/models", &data.Cars)
+		errCh <- err
+		doneCh <- struct{}{}
+	}()
+
+	go func() {
+		err := fetchJSON(baseURL+"/manufacturers", &data.Manufacturers)
+		errCh <- err
+		doneCh <- struct{}{}
+	}()
+
+	go func() {
+		err := fetchJSON(baseURL+"/categories", &data.Categories)
+		errCh <- err
+		doneCh <- struct{}{}
+	}()
+
+	// 🔥 fan-in (ждём 3 результата)
+
+	for i := 0; i < 3; i++ {
+		<-doneCh
 	}
 
-	tmpl.ExecuteTemplate(w, "index.html", pageData)
+	close(errCh)
+
+	// проверяем ошибки
+	for err := range errCh {
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+			return
+		}
+	}
+
+	tmpl.ExecuteTemplate(w, "index.html", data)
+	err := tmpl.ExecuteTemplate(w, "index.html", data)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 
 }
 
-func carsHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("cars"))
-}
+// func carsHandler(w http.ResponseWriter, r *http.Request) {
+// 	w.Write([]byte("cars"))
+// }
 
-func loadCarsAPI() catalog.CarsAPI {
-	return catalog.CarsAPI{
-		Models:        fetchModels(),
-		Categories:    fetchCategories(),
-		Manufacturers: fetchManufacturers(),
+func loadCarsAPI() PageData {
+	var data PageData
+
+	err := fetchJSON(baseURL+"/models", &data.Cars)
+	if err != nil {
+		log.Println(err)
 	}
 
+	err = fetchJSON(baseURL+"/manufacturers", &data.Manufacturers)
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = fetchJSON(baseURL+"/categories", &data.Categories)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return data
 }
 
 type CarWithDetails struct {
@@ -69,7 +118,7 @@ func specHandler(w http.ResponseWriter, r *http.Request) {
 	var manufacturer catalog.Manufacturers
 	var category catalog.Categories
 
-	for _, c := range data.Models {
+	for _, c := range data.Cars {
 		if fmt.Sprint(c.ID) == id {
 			car = c
 			break
