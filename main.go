@@ -9,6 +9,8 @@ import (
 	"strings"
 )
 
+const baseURL = "http://localhost:3000/api"
+
 func main() {
 
 	http.HandleFunc("/", homeHandler)
@@ -50,8 +52,6 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		errCh <- err
 		doneCh <- struct{}{}
 	}()
-
-	// 🔥 fan-in (ждём 3 результата)
 
 	for i := 0; i < 3; i++ {
 		<-doneCh
