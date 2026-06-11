@@ -6,10 +6,12 @@
           <a href="/">Home</a>
         </h1>
 
+
+
             <div>
                 <h1>{{.Car.Name}}, {{.Car.Year}}</h1>
 
-                  <img src="http://localhost:3000/api/images/{{.Car.Image}}" width="800"/>
+                  <img src="http://localhost:3000/api/images/{{.Car.Image}}?w=800" width="800" loading="lazy" alt="{{.Car.Image}}"/>
                  <h3>Basic information</h3>
                 <p>Car Id: {{.Car.ID}}</p>
                 <p>Name: {{.Car.Name}}</p>

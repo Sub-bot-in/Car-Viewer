@@ -14,7 +14,6 @@ func main() {
 	http.HandleFunc("/", homeHandler)
 	//	http.HandleFunc("/cars", carsHandler)
 	http.HandleFunc("/specifications/", specHandler)
-
 	fmt.Println("Server started on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

@@ -5,14 +5,17 @@
         <h1>Welcome to HiveCars</h1>
 
         {{range .Cars}}
-            <div>
-                <a href="http://localhost:8080/specifications/{{.ID}}">
-                    <h2 href="http://localhost:8080/specifications/{{.ID}}">{{.Name}}, {{.Year}}</h2>
-                </a>
-                <a href="http://localhost:8080/specifications/{{.ID}}">
-                  <img src="http://localhost:3000/api/images/{{.Image}}" width="400"/>
-                </a>
+        <div class="car-grid">
+          <div class="car-card">
+            <div class="image-container">
+              <img src="http://localhost:3000/api/images/{{.Image}}" width="400" alt="{{.Name}}">
+            <div class="car-info">
+              <h3>{{.Name}}</h3>
+              <span>{{.Year}}</span>
             </div>
+          </div>
+
+
         {{end}}
     </body>
     </html>
