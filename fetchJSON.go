@@ -6,8 +6,6 @@ import (
 	"net/http"
 )
 
-const baseURL = "http://localhost:3000/api"
-
 func fetchJSON(url string, target interface{}) error {
 	resp, err := http.Get(url)
 	if err != nil {
