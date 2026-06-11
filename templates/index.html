@@ -8,10 +8,14 @@
         <div class="car-grid">
           <div class="car-card">
             <div class="image-container">
+            <a href="http://localhost:8080/specifications/{{.ID}}">
               <img src="http://localhost:3000/api/images/{{.Image}}" width="400" alt="{{.Name}}">
+
             <div class="car-info">
+                <a href="http://localhost:8080/specifications/{{.ID}}">
               <h3>{{.Name}}</h3>
               <span>{{.Year}}</span>
+                </a>
             </div>
           </div>
 
