@@ -60,7 +60,6 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 
 	close(errCh)
 
-	// проверяем ошибки
 	for err := range errCh {
 		if err != nil {
 			http.Error(w, err.Error(), 500)
