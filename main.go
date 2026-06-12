@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"math"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -26,6 +28,14 @@ type PageData struct {
 	Cars          []catalog.Model
 	Manufacturers []catalog.Manufacturers
 	Categories    []catalog.Categories
+
+	Page       int
+	TotalPages int
+	PrevPage   int
+	NextPage   int
+	HasPrev    bool
+	HasNext    bool
+	Pages      []int
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
@@ -66,13 +76,54 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	tmpl.ExecuteTemplate(w, "index.html", data)
+	const perPage = 20
+
+	pageStr := r.URL.Query().Get("page")
+	page := 1
+
+	if pageStr != "" {
+		p, err := strconv.Atoi(pageStr)
+		if err == nil && p > 0 {
+			page = p
+		}
+	}
+
+	totalCars := len(data.Cars)
+	totalPages := int(math.Ceil(float64(totalCars) / float64(perPage)))
+
+	if totalPages == 0 {
+		totalPages = 1
+	}
+
+	if page > totalPages {
+		page = totalPages
+	}
+
+	start := (page - 1) * perPage
+	end := start + perPage
+
+	if end > totalCars {
+		end = totalCars
+	}
+
+	data.Cars = data.Cars[start:end]
+
+	data.Page = page
+	data.TotalPages = totalPages
+	data.PrevPage = page - 1
+	data.NextPage = page + 1
+	data.HasPrev = page > 1
+	data.HasNext = page < totalPages
+
+	for i := 1; i <= totalPages; i++ {
+		data.Pages = append(data.Pages, i)
+	}
+
 	err := tmpl.ExecuteTemplate(w, "index.html", data)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-
 }
 
 // func carsHandler(w http.ResponseWriter, r *http.Request) {

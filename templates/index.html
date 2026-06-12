@@ -21,5 +21,20 @@
 
 
         {{end}}
+
+        <div class="pagination">
+            {{if .HasPrev}}
+                <a href="/?page={{.PrevPage}}">Previous</a>
+            {{end}}
+
+            {{range .Pages}}
+                <a href="/?page={{.}}">{{.}}</a>
+            {{end}}
+
+            {{if .HasNext}}
+                <a href="/?page={{.NextPage}}">Next</a>
+            {{end}}
+        </div>
+
     </body>
     </html>
