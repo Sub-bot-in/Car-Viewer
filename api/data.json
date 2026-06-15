@@ -3148,48 +3148,6 @@
       "image": "bmw_m340i_2024.jpg"
     },
     {
-      "id": 216,
-      "name": "BMW 840i",
-      "manufacturerId": 3,
-      "categoryId": 2,
-      "year": 2024,
-      "specifications": {
-        "engine": "2.0L Inline-4",
-        "horsepower": 158,
-        "transmission": "CVT",
-        "drivetrain": "Front-Wheel Drive"
-      },
-      "image": "bmw_840i_2024.jpg"
-    },
-    {
-      "id": 217,
-      "name": "BMW M850i",
-      "manufacturerId": 3,
-      "categoryId": 2,
-      "year": 2024,
-      "specifications": {
-        "engine": "2.0L Inline-4",
-        "horsepower": 158,
-        "transmission": "CVT",
-        "drivetrain": "Front-Wheel Drive"
-      },
-      "image": "bmw_m850i_2024.jpg"
-    },
-    {
-      "id": 218,
-      "name": "BMW M8",
-      "manufacturerId": 3,
-      "categoryId": 2,
-      "year": 2024,
-      "specifications": {
-        "engine": "2.0L Inline-4",
-        "horsepower": 158,
-        "transmission": "CVT",
-        "drivetrain": "Front-Wheel Drive"
-      },
-      "image": "bmw_m8_2024.jpg"
-    },
-    {
       "id": 219,
       "name": "BMW M440i",
       "manufacturerId": 3,
@@ -3202,20 +3160,6 @@
         "drivetrain": "Rear-Wheel Drive"
       },
       "image": "bmw_m440i_2024.jpg"
-    },
-    {
-      "id": 220,
-      "name": "BMW i4",
-      "manufacturerId": 3,
-      "categoryId": 2,
-      "year": 2024,
-      "specifications": {
-        "engine": "2.0L Inline-4",
-        "horsepower": 158,
-        "transmission": "CVT",
-        "drivetrain": "Front-Wheel Drive"
-      },
-      "image": "bmw_i4_2024.jpg"
     },
     {
       "id": 221,
@@ -3414,34 +3358,6 @@
       "image": "bmw_m3_2023.jpg"
     },
     {
-      "id": 235,
-      "name": "BMW 740i",
-      "manufacturerId": 3,
-      "categoryId": 2,
-      "year": 2023,
-      "specifications": {
-        "engine": "2.0L Inline-4",
-        "horsepower": 158,
-        "transmission": "CVT",
-        "drivetrain": "Front-Wheel Drive"
-      },
-      "image": "bmw_740i_2023.jpg"
-    },
-    {
-      "id": 236,
-      "name": "BMW Z4",
-      "manufacturerId": 3,
-      "categoryId": 2,
-      "year": 2023,
-      "specifications": {
-        "engine": "2.0L Inline-4",
-        "horsepower": 158,
-        "transmission": "CVT",
-        "drivetrain": "Front-Wheel Drive"
-      },
-      "image": "bmw_z4_2023.jpg"
-    },
-    {
       "id": 237,
       "name": "BMW M5",
       "manufacturerId": 3,
@@ -3594,20 +3510,6 @@
         "drivetrain": "Rear-Wheel Drive"
       },
       "image": "bmw_m4_2023.jpg"
-    },
-    {
-      "id": 248,
-      "name": "Audi S4",
-      "manufacturerId": 4,
-      "categoryId": 2,
-      "year": 2024,
-      "specifications": {
-        "engine": "2.0L Inline-4",
-        "horsepower": 158,
-        "transmission": "CVT",
-        "drivetrain": "Front-Wheel Drive"
-      },
-      "image": "audi_s4_2024.jpg"
     },
     {
       "id": 249,
@@ -4030,20 +3932,6 @@
       "image": "audi_a4_2023.jpg"
     },
     {
-      "id": 279,
-      "name": "Audi S4",
-      "manufacturerId": 4,
-      "categoryId": 2,
-      "year": 2023,
-      "specifications": {
-        "engine": "2.0L Inline-4",
-        "horsepower": 158,
-        "transmission": "CVT",
-        "drivetrain": "Front-Wheel Drive"
-      },
-      "image": "audi_s4_2023.jpg"
-    },
-    {
       "id": 280,
       "name": "Audi A6",
       "manufacturerId": 4,
@@ -4168,90 +4056,6 @@
         "drivetrain": "All-Wheel Drive"
       },
       "image": "audi_rs_5_2023.jpg"
-    },
-    {
-      "id": 289,
-      "name": "Audi A7",
-      "manufacturerId": 4,
-      "categoryId": 2,
-      "year": 2023,
-      "specifications": {
-        "engine": "2.0L Inline-4",
-        "horsepower": 158,
-        "transmission": "CVT",
-        "drivetrain": "Front-Wheel Drive"
-      },
-      "image": "audi_a7_2023.jpg"
-    },
-    {
-      "id": 290,
-      "name": "Audi S3",
-      "manufacturerId": 4,
-      "categoryId": 2,
-      "year": 2023,
-      "specifications": {
-        "engine": "2.0L Inline-4",
-        "horsepower": 158,
-        "transmission": "CVT",
-        "drivetrain": "Front-Wheel Drive"
-      },
-      "image": "audi_s3_2023.jpg"
-    },
-    {
-      "id": 291,
-      "name": "Audi S7",
-      "manufacturerId": 4,
-      "categoryId": 2,
-      "year": 2023,
-      "specifications": {
-        "engine": "2.0L Inline-4",
-        "horsepower": 158,
-        "transmission": "CVT",
-        "drivetrain": "Front-Wheel Drive"
-      },
-      "image": "audi_s7_2023.jpg"
-    },
-    {
-      "id": 292,
-      "name": "Audi RS 7",
-      "manufacturerId": 4,
-      "categoryId": 2,
-      "year": 2023,
-      "specifications": {
-        "engine": "3.0L Twin-Turbo V6",
-        "horsepower": 400,
-        "transmission": "8-speed Automatic",
-        "drivetrain": "All-Wheel Drive"
-      },
-      "image": "audi_rs_7_2023.jpg"
-    },
-    {
-      "id": 293,
-      "name": "Audi RS 3",
-      "manufacturerId": 4,
-      "categoryId": 2,
-      "year": 2023,
-      "specifications": {
-        "engine": "3.0L Twin-Turbo V6",
-        "horsepower": 400,
-        "transmission": "8-speed Automatic",
-        "drivetrain": "All-Wheel Drive"
-      },
-      "image": "audi_rs_3_2023.jpg"
-    },
-    {
-      "id": 294,
-      "name": "Audi A6 allroad",
-      "manufacturerId": 4,
-      "categoryId": 2,
-      "year": 2023,
-      "specifications": {
-        "engine": "2.0L Inline-4",
-        "horsepower": 158,
-        "transmission": "CVT",
-        "drivetrain": "Front-Wheel Drive"
-      },
-      "image": "audi_a6_allroad_2023.jpg"
     },
     {
       "id": 295,

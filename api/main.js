@@ -1,88 +1,201 @@
-const express = require("express");
-const expressStatic = require("express-static");
-const data = require("./data.json");
+package main
 
+import (
+	"cars/catalog"
+	"fmt"
+	"html/template"
+	"log"
+	"math"
+	"net/http"
+	"strconv"
+	"strings"
+)
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+const baseURL = "http://localhost:3000/api"
 
+func main() {
 
-// Middleware to parse JSON requests
-app.use(express.json());
+	http.HandleFunc("/", homeHandler)
+	//	http.HandleFunc("/cars", carsHandler)
+	http.HandleFunc("/specifications/", specHandler)
+	fmt.Println("Server started on http://localhost:8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
 
+var tmpl *template.Template = template.Must(template.ParseGlob("templates/*.html"))
 
-app.get("/api", (req, res) => {
-  res.json({
-    models: "/api/models",
-    categories: "/api/categories",
-    manufacturers: "/api/manufacturers",
-  });
-});
+type PageData struct {
+	Cars          []catalog.Model
+	Manufacturers []catalog.Manufacturers
+	Categories    []catalog.Categories
 
+	Page       int
+	TotalPages int
+	PrevPage   int
+	NextPage   int
+	HasPrev    bool
+	HasNext    bool
+	Pages      []int
+}
 
-// Static files (Used to serve images)
-app.use("/api/images", expressStatic("img"));
+func homeHandler(w http.ResponseWriter, r *http.Request) {
 
+	data := PageData{}
 
-const carModels = data.carModels
-, categories = data.categories
-, manufacturers = data.manufacturers;
+	errCh := make(chan error, 3) // буфер важен!
+	doneCh := make(chan struct{}, 3)
 
+	go func() {
+		err := fetchJSON(baseURL+"/models", &data.Cars)
+		errCh <- err
+		doneCh <- struct{}{}
+	}()
 
-// Car Models Handler
-app.get("/api/models", (req, res) => {
-  res.json(carModels);
-});
+	go func() {
+		err := fetchJSON(baseURL+"/manufacturers", &data.Manufacturers)
+		errCh <- err
+		doneCh <- struct{}{}
+	}()
 
-app.get("/api/models/:id", (req, res) => {
-  const id = parseInt(req.params.id);
-  const model = carModels.find((model) => model.id === id);
+	go func() {
+		err := fetchJSON(baseURL+"/categories", &data.Categories)
+		errCh <- err
+		doneCh <- struct{}{}
+	}()
 
-  if (!model) {
-    return res.status(404).json({ message: "Car model not found" });
-  }
+	for i := 0; i < 3; i++ {
+		<-doneCh
+	}
 
-  res.json(model);
-});
+	close(errCh)
 
+	for err := range errCh {
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+			return
+		}
+	}
 
-// Categories Handler
-app.get("/api/categories", (req, res) => {
-  res.json(categories);
-});
+	const perPage = 20
 
-app.get("/api/categories/:id", (req, res) => {
-  const id = parseInt(req.params.id);
-  const category = categories.find((category) => category.id === id);
+	pageStr := r.URL.Query().Get("page")
+	page := 1
 
-  if (!category) {
-    return res.status(404).json({ message: "Category not found" });
-  }
+	if pageStr != "" {
+		p, err := strconv.Atoi(pageStr)
+		if err == nil && p > 0 {
+			page = p
+		}
+	}
 
-  res.json(category);
-});
+	totalCars := len(data.Cars)
+	totalPages := int(math.Ceil(float64(totalCars) / float64(perPage)))
 
+	if totalPages == 0 {
+		totalPages = 1
+	}
 
-// Manufacturers Handler
-app.get("/api/manufacturers", (req, res) => {
-  res.json(manufacturers);
-});
+	if page > totalPages {
+		page = totalPages
+	}
 
-app.get("/api/manufacturers/:id", (req, res) => {
-  const id = parseInt(req.params.id);
-  const manufacturer = manufacturers.find(
-    (manufacturer) => manufacturer.id === id
-  );
+	start := (page - 1) * perPage
+	end := start + perPage
 
-  if (!manufacturer) {
-    return res.status(404).json({ message: "Manufacturer not found" });
-  }
+	if end > totalCars {
+		end = totalCars
+	}
 
-  res.json(manufacturer);
-});
+	data.Cars = data.Cars[start:end]
 
+	data.Page = page
+	data.TotalPages = totalPages
+	data.PrevPage = page - 1
+	data.NextPage = page + 1
+	data.HasPrev = page > 1
+	data.HasNext = page < totalPages
 
-// Serve
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+	for i := 1; i <= totalPages; i++ {
+		data.Pages = append(data.Pages, i)
+	}
+
+	err := tmpl.ExecuteTemplate(w, "index.html", data)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+// func carsHandler(w http.ResponseWriter, r *http.Request) {
+// 	w.Write([]byte("cars"))
+// }
+
+func loadCarsAPI() PageData {
+	var data PageData
+
+	err := fetchJSON(baseURL+"/models", &data.Cars)
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = fetchJSON(baseURL+"/manufacturers", &data.Manufacturers)
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = fetchJSON(baseURL+"/categories", &data.Categories)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return data
+}
+
+type CarWithDetails struct {
+	Car          catalog.Model
+	Manufacturer catalog.Manufacturers
+	Category     catalog.Categories
+}
+
+func specHandler(w http.ResponseWriter, r *http.Request) {
+
+	id := strings.TrimPrefix(r.URL.Path, "/specifications/")
+
+	data := loadCarsAPI()
+
+	var car catalog.Model
+	var manufacturer catalog.Manufacturers
+	var category catalog.Categories
+
+	for _, c := range data.Cars {
+		if fmt.Sprint(c.ID) == id {
+			car = c
+			break
+		}
+	}
+
+	for _, c := range data.Manufacturers {
+		if fmt.Sprint(c.ID) == id {
+			manufacturer = c
+			break
+		}
+	}
+
+	for _, c := range data.Categories {
+		if fmt.Sprint(c.ID) == id {
+			category = c
+			break
+		}
+	}
+
+	specPage := CarWithDetails{
+		Car:          car,
+		Manufacturer: manufacturer,
+		Category:     category,
+	}
+	err := tmpl.ExecuteTemplate(w, "car.html", specPage)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
