@@ -3512,6 +3512,20 @@
       "image": "bmw_m4_2023.jpg"
     },
     {
+      "id": 248,
+      "name": "Audi S4",
+      "manufacturerId": 4,
+      "categoryId": 2,
+      "year": 2024,
+      "specifications": {
+        "engine": "2.0L Inline-4",
+        "horsepower": 158,
+        "transmission": "CVT",
+        "drivetrain": "Front-Wheel Drive"
+      },
+      "image": "audi_s4_2024.jpg"
+    },
+    {
       "id": 249,
       "name": "Audi A6",
       "manufacturerId": 4,
