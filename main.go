@@ -42,34 +42,22 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 
 	data := PageData{}
 
-	errCh := make(chan error, 3) // буфер важен!
-	doneCh := make(chan struct{}, 3)
+	errCh := make(chan error, 3)
 
 	go func() {
-		err := fetchJSON(baseURL+"/models", &data.Cars)
-		errCh <- err
-		doneCh <- struct{}{}
+		errCh <- fetchJSON(baseURL+"/models", &data.Cars)
 	}()
 
 	go func() {
-		err := fetchJSON(baseURL+"/manufacturers", &data.Manufacturers)
-		errCh <- err
-		doneCh <- struct{}{}
+		errCh <- fetchJSON(baseURL+"/manufacturers", &data.Manufacturers)
 	}()
 
 	go func() {
-		err := fetchJSON(baseURL+"/categories", &data.Categories)
-		errCh <- err
-		doneCh <- struct{}{}
+		errCh <- fetchJSON(baseURL+"/categories", &data.Categories)
 	}()
 
-	for i := 0; i < 3; i++ {
-		<-doneCh
-	}
-
-	close(errCh)
-
-	for err := range errCh {
+	for range 3 {
+		err := <-errCh
 		if err != nil {
 			http.Error(w, err.Error(), 500)
 			return
