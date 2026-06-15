@@ -55,7 +55,10 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	go func() {
 		errCh <- fetchJSON(baseURL+"/categories", &data.Categories)
 	}()
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3c5de55 (api fixed)
 	for range 3 {
 		err := <-errCh
 		if err != nil {
