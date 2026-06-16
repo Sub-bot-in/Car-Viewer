@@ -110,6 +110,7 @@ type CarWithDetails struct {
 	Car          catalog.Model
 	Manufacturer catalog.Manufacturers
 	Category     catalog.Categories
+	Page         int
 }
 
 func specHandler(w http.ResponseWriter, r *http.Request) {
@@ -143,11 +144,23 @@ func specHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	page := 1
+
+	pageStr := r.URL.Query().Get("page")
+	if pageStr != "" {
+		p, err := strconv.Atoi(pageStr)
+		if err == nil && p > 0 {
+			page = p
+		}
+	}
+
 	specPage := CarWithDetails{
 		Car:          car,
 		Manufacturer: manufacturer,
 		Category:     category,
+		Page:         page,
 	}
+
 	err := tmpl.ExecuteTemplate(w, "car.html", specPage)
 	if err != nil {
 		log.Println(err)
