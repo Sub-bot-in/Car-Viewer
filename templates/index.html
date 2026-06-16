@@ -1,38 +1,52 @@
 <!doctype html>
-<html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>HiveCars</title>
+        <link rel="stylesheet" href="/static/css/style.css" />
     </head>
     <body>
-        <h1>Welcome to HiveCars</h1>
+        <header class="hero">
+            <h1>HiveCars</h1>
+            <p>Explore vehicles from our collection</p>
+        </header>
 
-        {{range .Cars}}
-        <div class="car-grid">
-          <div class="car-card">
-            <div class="image-container">
-            <a href="http://localhost:8080/specifications/{{.ID}}">
-              <img src="http://localhost:3000/api/images/{{.Image}}" width="400" alt="{{.Name}}">
+        <main class="container">
+            <div class="car-grid">
+                {{range .Cars}}
+                <article class="car-card">
+                    <a href="/specifications/{{.ID}}" class="card-link">
+                        <div class="image-container">
+                            <img
+                                src="http://localhost:3000/api/images/{{.Image}}"
+                                alt="{{.Name}}"
+                            />
+                        </div>
 
-            <div class="car-info">
-                <a href="http://localhost:8080/specifications/{{.ID}}">
-              <h3>{{.Name}}</h3>
-              <span>{{.Year}}</span>
-                </a>
+                        <div class="car-info">
+                            <h3>{{.Name}}</h3>
+                            <span class="year">{{.Year}}</span>
+                        </div>
+                    </a>
+                </article>
+                {{end}}
             </div>
-          </div>
-        {{end}}
 
-        <div class="pagination">
-            {{if .HasPrev}}
-                <a href="/?page={{.PrevPage}}">Previous</a>
-            {{end}}
-
-            {{range .Pages}}
-                <a href="/?page={{.}}">{{.}}</a>
-            {{end}}
-
-            {{if .HasNext}}
-                <a href="/?page={{.NextPage}}">Next</a>
-            {{end}}
-        </div>
-
+            <div class="pagination">
+                {{if .HasPrev}}
+                <a href="/?page={{.PrevPage}}" class="page-btn"> ← Previous </a>
+                {{end}} {{range .Pages}}
+                <a
+                    href="/?page={{.}}"
+                    class="page-number {{if eq $.Page .}}active-page{{end}}"
+                >
+                    {{.}}
+                </a>
+                {{end}} {{if .HasNext}}
+                <a href="/?page={{.NextPage}}" class="page-btn"> Next → </a>
+                {{end}}
+            </div>
+        </main>
     </body>
-    </html>
+</html>
