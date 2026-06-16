@@ -131,14 +131,14 @@ func specHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, c := range data.Manufacturers {
-		if fmt.Sprint(c.ID) == id {
+		if c.ID == car.ManufacturerID {
 			manufacturer = c
 			break
 		}
 	}
 
 	for _, c := range data.Categories {
-		if fmt.Sprint(c.ID) == id {
+		if c.ID == car.CategoryID {
 			category = c
 			break
 		}
