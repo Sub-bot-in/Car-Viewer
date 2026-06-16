@@ -33,8 +33,11 @@ body {
 .hero {
     text-align: center;
     padding: 3rem 1rem;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    color: white;
+    background-color: #cb8e00;
+    background-image: url("/static/images/bees2.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .hero h1 {
