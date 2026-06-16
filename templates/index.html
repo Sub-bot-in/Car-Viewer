@@ -14,9 +14,12 @@
 
         <main class="container">
             <div class="car-grid">
-                {{range .Cars}}
+                {{$root := .}} {{range .Cars}}
                 <article class="car-card">
-                    <a href="/specifications/{{.ID}}" class="card-link">
+                    <a
+                        href="/specifications/{{.ID}}?page={{$root.Page}}"
+                        class="card-link"
+                    >
                         <div class="image-container">
                             <img
                                 src="http://localhost:3000/api/images/{{.Image}}"
@@ -34,18 +37,13 @@
             </div>
 
             <div class="pagination">
-                {{if .HasPrev}}
-                <a href="/?page={{.PrevPage}}" class="page-btn"> ← Previous </a>
-                {{end}} {{range .Pages}}
-                <a
-                    href="/?page={{.}}"
-                    class="page-number {{if eq $.Page .}}active-page{{end}}"
-                >
-                    {{.}}
-                </a>
-                {{end}} {{if .HasNext}}
-                <a href="/?page={{.NextPage}}" class="page-btn"> Next → </a>
-                {{end}}
+                {{range $root.Pages}} {{if .IsDots}}
+                <span class="dots">...</span>
+                {{else}} {{if eq .Number $root.Page}}
+                <span class="page-number active-page">{{.Number}}</span>
+                {{else}}
+                <a class="page-number" href="/?page={{.Number}}">{{.Number}}</a>
+                {{end}} {{end}} {{end}}
             </div>
         </main>
     </body>
