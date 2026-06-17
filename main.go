@@ -110,6 +110,7 @@ type CarWithDetails struct {
 	Car          catalog.Model
 	Manufacturer catalog.Manufacturers
 	Category     catalog.Categories
+	RelatedCars  []catalog.Model
 	Page         int
 }
 
@@ -154,10 +155,13 @@ func specHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	relatedCars := getRelatedCars(data.Cars, car, 10)
+
 	specPage := CarWithDetails{
 		Car:          car,
 		Manufacturer: manufacturer,
 		Category:     category,
+		RelatedCars:  relatedCars,
 		Page:         page,
 	}
 
