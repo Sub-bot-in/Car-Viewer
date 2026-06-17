@@ -1,27 +1,65 @@
 <!doctype html>
 <html>
+    <head>
+        <title>{{.Car.Name}}</title>
     </head>
     <body>
         <h1>
             <a href="/?page={{.Page}}">Back</a>
         </h1>
-            <div>
+
+        <div class="car-page">
+            <main class="car-details">
                 <h1>{{.Car.Name}}, {{.Car.Year}}</h1>
 
-                  <img src="http://localhost:3000/api/images/{{.Car.Image}}?w=800" width="800" loading="lazy" alt="{{.Car.Image}}"/>
-                 <h3>Basic information</h3>
+                <img
+                    src="http://localhost:3000/api/images/{{.Car.Image}}?w=800"
+                    width="800"
+                    loading="lazy"
+                    alt="{{.Car.Name}}"
+                />
+
+                <h3>Basic information</h3>
                 <p>Car Id: {{.Car.ID}}</p>
                 <p>Name: {{.Car.Name}}</p>
                 <p>Year: {{.Car.Year}}</p>
                 <p>Engine: {{.Car.Specifications.Engine}}</p>
                 <p>Sub type: {{.Category.Name}}</p>
+
                 <h3>Technical information</h3>
                 <p>Horsepower: {{.Car.Specifications.Horsepower}}</p>
                 <p>Transmission: {{.Car.Specifications.Transmission}}</p>
                 <p>Drivetrain: {{.Car.Specifications.Drivetrain}}</p>
+
                 <h3>More info about manufacturer "{{.Manufacturer.Name}}"</h3>
                 <p>Founding Year: {{.Manufacturer.FoundingYear}}</p>
                 <p>Country: {{.Manufacturer.Country}}</p>
-            </div>
+            </main>
+
+            <aside class="related-cars">
+                <h3>You might be interested</h3>
+
+                {{range .RelatedCars}}
+                <a
+                    class="related-card"
+                    href="/specifications/{{.ID}}?page={{$.Page}}"
+                >
+                    <img
+                        src="http://localhost:3000/api/images/{{.Image}}?w=300"
+                        width="120"
+                        loading="lazy"
+                        alt="{{.Name}}"
+                    />
+
+                    <div>
+                        <h4>{{.Name}}</h4>
+                        <p>{{.Year}}</p>
+                    </div>
+                </a>
+                {{else}}
+                <p>No similar cars found.</p>
+                {{end}}
+            </aside>
+        </div>
     </body>
-    </html>
+</html>
