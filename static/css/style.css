@@ -119,6 +119,53 @@ body {
     margin: 2rem auto;
 }
 
+/* Filters */
+
+.filters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    margin-bottom: 2rem;
+
+    padding: 1rem;
+    background: var(--bg-white);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-card);
+}
+.filters select {
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    background: white;
+}
+
+.filters button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+
+    background: var(--accent);
+    color: var(--text-white);
+
+    border: 1px solid var(--accent);
+
+    font-weight: 600;
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition: all var(--transition-fast);
+}
+
+.filters button:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
 /* Grid */
 
 .car-grid {

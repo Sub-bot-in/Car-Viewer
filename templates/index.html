@@ -12,12 +12,60 @@
             <p>Explore vehicles from our collection</p>
         </header>
 
+        <form method="GET" class="filters">
+            <select name="manufacturer">
+                <option value="">All manufacturers</option>
+                {{range .Manufacturers}}
+                <option
+                    value="{{.Name}}"
+                    {{if
+                    eq
+                    $.SelectedManufacturer
+                    .Name}}selected{{end}}
+                >
+                    {{.Name}}
+                </option>
+                {{end}}
+            </select>
+
+            <select name="category">
+                <option value="">All categories</option>
+                {{range .Categories}}
+                <option
+                    value="{{.Name}}"
+                    {{if
+                    eq
+                    $.SelectedCategory
+                    .Name}}selected{{end}}
+                >
+                    {{.Name}}
+                </option>
+                {{end}}
+            </select>
+
+            <select name="year">
+                <option value="">All years</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+                <option value="2020">2020</option>
+                <option value="2019">2019</option>
+                <option value="2018">2018</option>
+                <option value="2017">2017</option>
+                <option value="2016">2016</option>
+                <option value="2015">2015</option>
+            </select>
+
+            <button type="submit">Filter</button>
+        </form>
+
         <main class="container">
             <div class="car-grid">
                 {{$root := .}} {{range .Cars}}
                 <article class="car-card">
                     <a
-                        href="/specifications/{{.ID}}?page={{$root.Page}}"
+                        href="/specifications/{{.ID}}?page={{$root.Page}}&manufacturer={{$root.SelectedManufacturer}}&category={{$root.SelectedCategory}}&year={{$root.SelectedYear}}"
                         class="card-link"
                     >
                         <div class="image-container">
@@ -42,7 +90,12 @@
                 {{else}} {{if eq .Number $root.Page}}
                 <span class="page-number active-page">{{.Number}}</span>
                 {{else}}
-                <a class="page-number" href="/?page={{.Number}}">{{.Number}}</a>
+                <a
+                    class="page-number"
+                    href="/?page={{.Number}}&manufacturer={{$root.SelectedManufacturer}}&category={{$root.SelectedCategory}}&year={{$root.SelectedYear}}"
+                >
+                    {{.Number}}</a
+                >
                 {{end}} {{end}} {{end}}
             </div>
         </main>

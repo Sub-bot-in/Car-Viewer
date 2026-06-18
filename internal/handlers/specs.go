@@ -18,11 +18,14 @@ type CarWithDetails struct {
 	Category     catalog.Categories
 	RelatedCars  []catalog.Model
 	Page         int
+
+	ManufacturerFilter string
+	CategoryFilter     string
+	YearFilter         string
 }
 
 func SpecHandler(tmpl *template.Template) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
 		id := strings.TrimPrefix(r.URL.Path, "/specifications/")
 
 		data := api.LoadCarsAPI()
@@ -70,6 +73,10 @@ func SpecHandler(tmpl *template.Template) http.HandlerFunc {
 			Category:     category,
 			RelatedCars:  relatedCars,
 			Page:         page,
+
+			ManufacturerFilter: r.URL.Query().Get("manufacturer"),
+			CategoryFilter:     r.URL.Query().Get("category"),
+			YearFilter:         r.URL.Query().Get("year"),
 		}
 
 		err := tmpl.ExecuteTemplate(w, "car.html", specPage)

@@ -15,6 +15,10 @@ type PageData struct {
 
 	Page  int
 	Pages []PageLink
+
+	SelectedManufacturer string
+	SelectedCategory     string
+	SelectedYear         string
 }
 
 type PageLink struct {
@@ -88,7 +92,39 @@ func PaginateCars(data *PageData, r *http.Request) {
 
 	page := getCurrentPage(r)
 
-	totalCars := len(data.Cars)
+	manufacturer := r.URL.Query().Get("manufacturer")
+	category := r.URL.Query().Get("category")
+	yearStr := r.URL.Query().Get("year")
+
+	var year int
+	if yearStr != "" {
+		year, _ = strconv.Atoi(yearStr)
+	}
+
+	data.SelectedManufacturer = manufacturer
+	data.SelectedCategory = category
+	data.SelectedYear = yearStr
+
+	filtered := make([]catalog.Model, 0, len(data.Cars))
+
+	for _, car := range data.Cars {
+
+		if manufacturer != "" && car.ManufacturerID != parseManufacturerID(data, manufacturer) {
+			continue
+		}
+
+		if category != "" && car.CategoryID != parseCategoryID(data, category) {
+			continue
+		}
+
+		if year != 0 && car.Year != year {
+			continue
+		}
+
+		filtered = append(filtered, car)
+	}
+
+	totalCars := len(filtered)
 	totalPages := calculateTotalPages(totalCars, perPage)
 
 	if page > totalPages {
@@ -97,8 +133,7 @@ func PaginateCars(data *PageData, r *http.Request) {
 
 	start, end := getPageBounds(page, perPage, totalCars)
 
-	data.Cars = data.Cars[start:end]
-
+	data.Cars = filtered[start:end]
 	data.Page = page
 	data.Pages = buildPages(page, totalPages)
 }
@@ -131,4 +166,22 @@ func getPageBounds(page, perPage, totalItems int) (int, int) {
 	}
 
 	return start, end
+}
+
+func parseManufacturerID(data *PageData, name string) int {
+	for _, m := range data.Manufacturers {
+		if m.Name == name {
+			return m.ID
+		}
+	}
+	return 0
+}
+
+func parseCategoryID(data *PageData, name string) int {
+	for _, c := range data.Categories {
+		if c.Name == name {
+			return c.ID
+		}
+	}
+	return 0
 }

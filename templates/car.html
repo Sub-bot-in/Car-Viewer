@@ -12,7 +12,11 @@
 
         <main class="container car-page">
             <section class="car-details-card">
-                <a href="/?page={{.Page}}" class="back-btn">← Back</a>
+                <a
+                    href="/?page={{.Page}}{{if .ManufacturerFilter}}&manufacturer={{.ManufacturerFilter}}{{end}}{{if .CategoryFilter}}&category={{.CategoryFilter}}{{end}}{{if .YearFilter}}&year={{.YearFilter}}{{end}}"
+                    class="back-btn"
+                    >← Back</a
+                >
 
                 <h2>{{.Car.Name}}</h2>
 
@@ -71,7 +75,7 @@
 
                 {{range .RelatedCars}}
                 <a
-                    href="/specifications/{{.ID}}?page={{$.Page}}"
+                    href="/specifications/{{.ID}}?page={{$.Page}}{{if $.ManufacturerFilter}}&manufacturer={{$.ManufacturerFilter}}{{end}}{{if $.CategoryFilter}}&category={{$.CategoryFilter}}{{end}}{{if $.YearFilter}}&year={{$.YearFilter}}{{end}}"
                     class="related-card"
                 >
                     <img
