@@ -2,64 +2,96 @@
 <html>
     <head>
         <title>{{.Car.Name}}</title>
+        <link rel="stylesheet" href="/static/css/style.css" />
     </head>
     <body>
-        <h1>
-            <a href="/?page={{.Page}}">Back</a>
-        </h1>
+        <header class="hero">
+            <h1>Hive Car</h1>
+            <p>Specifications</p>
+        </header>
 
-        <div class="car-page">
-            <main class="car-details">
-                <h1>{{.Car.Name}}, {{.Car.Year}}</h1>
+        <main class="container car-page">
+            <section class="car-details-card">
+                <a
+                    href="/?page={{.Page}}{{if .ManufacturerFilter}}&manufacturer={{.ManufacturerFilter}}{{end}}{{if .CategoryFilter}}&category={{.CategoryFilter}}{{end}}{{if .YearFilter}}&year={{.YearFilter}}{{end}}"
+                    class="back-btn"
+                    >← Back</a
+                >
 
-                <img
-                    src="http://localhost:3000/api/images/{{.Car.Image}}?w=800"
-                    width="800"
-                    loading="lazy"
-                    alt="{{.Car.Name}}"
-                />
+                <h2>{{.Car.Name}}</h2>
 
-                <h3>Basic information</h3>
-                <p>Car Id: {{.Car.ID}}</p>
-                <p>Name: {{.Car.Name}}</p>
-                <p>Year: {{.Car.Year}}</p>
-                <p>Engine: {{.Car.Specifications.Engine}}</p>
-                <p>Sub type: {{.Category.Name}}</p>
+                <div class="car-image">
+                    <img
+                        src="http://localhost:3000/api/images/{{.Car.Image}}?w=800"
+                        alt="{{.Car.Name}}"
+                    />
+                </div>
 
-                <h3>Technical information</h3>
-                <p>Horsepower: {{.Car.Specifications.Horsepower}}</p>
-                <p>Transmission: {{.Car.Specifications.Transmission}}</p>
-                <p>Drivetrain: {{.Car.Specifications.Drivetrain}}</p>
+                <div class="info-section">
+                    <h3>Basic information</h3>
 
-                <h3>More info about manufacturer "{{.Manufacturer.Name}}"</h3>
-                <p>Founding Year: {{.Manufacturer.FoundingYear}}</p>
-                <p>Country: {{.Manufacturer.Country}}</p>
-            </main>
+                    <p><strong>Car ID:</strong> {{.Car.ID}}</p>
+                    <p><strong>Name:</strong> {{.Car.Name}}</p>
+                    <p><strong>Year:</strong> {{.Car.Year}}</p>
+                    <p>
+                        <strong>Engine:</strong> {{.Car.Specifications.Engine}}
+                    </p>
+                    <p><strong>Sub type:</strong> {{.Category.Name}}</p>
+                </div>
+
+                <div class="info-section">
+                    <h3>Technical information</h3>
+
+                    <p>
+                        <strong>Horsepower:</strong>
+                        {{.Car.Specifications.Horsepower}}
+                    </p>
+                    <p>
+                        <strong>Transmission:</strong>
+                        {{.Car.Specifications.Transmission}}
+                    </p>
+                    <p>
+                        <strong>Drivetrain:</strong>
+                        {{.Car.Specifications.Drivetrain}}
+                    </p>
+                </div>
+
+                <div class="info-section">
+                    <h3>Manufacturer "{{.Manufacturer.Name}}"</h3>
+
+                    <p>
+                        <strong>Founded:</strong>
+                        {{.Manufacturer.FoundingYear}}
+                    </p>
+                    <p>
+                        <strong>Country:</strong>
+                        {{.Manufacturer.Country}}
+                    </p>
+                </div>
+            </section>
 
             <aside class="related-cars">
                 <h3>You might be interested</h3>
 
                 {{range .RelatedCars}}
                 <a
+                    href="/specifications/{{.ID}}?page={{$.Page}}{{if $.ManufacturerFilter}}&manufacturer={{$.ManufacturerFilter}}{{end}}{{if $.CategoryFilter}}&category={{$.CategoryFilter}}{{end}}{{if $.YearFilter}}&year={{$.YearFilter}}{{end}}"
                     class="related-card"
-                    href="/specifications/{{.ID}}?page={{$.Page}}"
                 >
                     <img
                         src="http://localhost:3000/api/images/{{.Image}}?w=300"
-                        width="120"
-                        loading="lazy"
                         alt="{{.Name}}"
                     />
 
                     <div>
                         <h4>{{.Name}}</h4>
-                        <p>{{.Year}}</p>
+                        <span class="year">{{.Year}}</span>
                     </div>
                 </a>
                 {{else}}
                 <p>No similar cars found.</p>
                 {{end}}
             </aside>
-        </div>
+        </main>
     </body>
 </html>
