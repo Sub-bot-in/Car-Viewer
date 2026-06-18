@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Compare cars</title>
+        <link rel="stylesheet" href="/static/css/style.css" />
+    </head>
+    <body>
+        <header class="compare-header">
+            <a href="/">Home</a>
+            <h1>Compare cars</h1>
+
+            {{if .Cars}}
+            <a class="clear-compare" href="/compare/clear">Clear comparison</a>
+            {{end}}
+        </header>
+
+        {{if .Cars}}
+        <div class="compare-wrapper">
+            <table class="compare-table">
+                <tr>
+                    <th>Car</th>
+                    {{range .Cars}}
+                    <td>
+                        <img
+                            src="http://localhost:3000/api/images/{{.Image}}?w=300"
+                            alt="{{.Name}}"
+                            class="compare-img"
+                        />
+                        <h3>{{.Name}}</h3>
+                        <p>{{.Year}}</p>
+                        <a href="/compare/remove/{{.ID}}">Remove</a>
+                    </td>
+                    {{end}}
+                </tr>
+
+                <tr>
+                    <th>Manufacturer</th>
+                    {{range .Cars}}
+                    <td>
+                        {{with index $.Manufacturers
+                        .ManufacturerID}}{{.Name}}{{end}}
+                    </td>
+                    {{end}}
+                </tr>
+
+                <tr>
+                    <th>Country</th>
+                    {{range .Cars}}
+                    <td>
+                        {{with index $.Manufacturers
+                        .ManufacturerID}}{{.Country}}{{end}}
+                    </td>
+                    {{end}}
+                </tr>
+
+                <tr>
+                    <th>Category</th>
+                    {{range .Cars}}
+                    <td>
+                        {{with index $.Categories .CategoryID}}{{.Name}}{{end}}
+                    </td>
+                    {{end}}
+                </tr>
+
+                <tr>
+                    <th>Engine</th>
+                    {{range .Cars}}
+                    <td>{{.Specifications.Engine}}</td>
+                    {{end}}
+                </tr>
+
+                <tr>
+                    <th>Horsepower</th>
+                    {{range .Cars}}
+                    <td>{{.Specifications.Horsepower}}</td>
+                    {{end}}
+                </tr>
+
+                <tr>
+                    <th>Transmission</th>
+                    {{range .Cars}}
+                    <td>{{.Specifications.Transmission}}</td>
+                    {{end}}
+                </tr>
+
+                <tr>
+                    <th>Drivetrain</th>
+                    {{range .Cars}}
+                    <td>{{.Specifications.Drivetrain}}</td>
+                    {{end}}
+                </tr>
+            </table>
+        </div>
+        {{else}}
+        <div class="empty-compare">
+            <h2>No cars selected</h2>
+            <p>Add cars to compare from the catalog.</p>
+            <a href="/">Go to catalog</a>
+        </div>
+        {{end}}
+    </body>
+</html>
