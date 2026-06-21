@@ -3,6 +3,7 @@ package pagination
 import (
 	"math"
 	"net/http"
+	"sort"
 	"strconv"
 
 	"cars/catalog"
@@ -18,12 +19,33 @@ type PageData struct {
 
 	SelectedManufacturer string
 	SelectedCategory     string
-	SelectedYear         string
+	SelectedYear         int
+	Years                []int
+
+	CompareIDs     map[int]bool
+	CompareCount   int
+	MaxCompareCars int
 }
 
 type PageLink struct {
 	Number int
 	IsDots bool
+}
+
+func buildYears(cars []catalog.Model) []int {
+	seen := make(map[int]bool)
+	var years []int
+
+	for _, car := range cars {
+		if !seen[car.Year] {
+			seen[car.Year] = true
+			years = append(years, car.Year)
+		}
+	}
+
+	sort.Ints(years)
+
+	return years
 }
 
 func buildPages(currentPage, totalPages int) []PageLink {
@@ -90,20 +112,25 @@ func buildPages(currentPage, totalPages int) []PageLink {
 func PaginateCars(data *PageData, r *http.Request) {
 	const perPage = 20
 
+	data.Years = buildYears(data.Cars)
+
 	page := getCurrentPage(r)
 
 	manufacturer := r.URL.Query().Get("manufacturer")
 	category := r.URL.Query().Get("category")
 	yearStr := r.URL.Query().Get("year")
 
-	var year int
-	if yearStr != "" {
-		year, _ = strconv.Atoi(yearStr)
-	}
-
 	data.SelectedManufacturer = manufacturer
 	data.SelectedCategory = category
-	data.SelectedYear = yearStr
+
+	year := 0
+
+	if yearStr != "" {
+		year, err := strconv.Atoi(yearStr)
+		if err == nil {
+			data.SelectedYear = year
+		}
+	}
 
 	filtered := make([]catalog.Model, 0, len(data.Cars))
 

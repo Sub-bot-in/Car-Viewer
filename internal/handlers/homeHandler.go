@@ -49,6 +49,10 @@ func HomeHandler(tmpl *template.Template) http.HandlerFunc {
 			}
 		}
 
+		data.CompareIDs = GetCompareIDMap(r)
+		data.CompareCount = len(GetCompareIDs(r))
+		data.MaxCompareCars = MaxCompareCars
+
 		pagination.PaginateCars(&data, r)
 
 		err := tmpl.ExecuteTemplate(w, "index.html", data)

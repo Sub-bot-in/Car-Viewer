@@ -45,25 +45,29 @@
 
             <select name="year">
                 <option value="">All years</option>
-                <option value="2024">2024</option>
-                <option value="2023">2023</option>
-                <option value="2022">2022</option>
-                <option value="2021">2021</option>
-                <option value="2020">2020</option>
-                <option value="2019">2019</option>
-                <option value="2018">2018</option>
-                <option value="2017">2017</option>
-                <option value="2016">2016</option>
-                <option value="2015">2015</option>
+                {{range .Years}}
+                <option value="{{.}}" {{if eq $.SelectedYear .}}selected{{end}}>
+                    {{.}}
+                </option>
+                {{end}}
             </select>
 
             <button type="submit">Filter</button>
+
+            {{if gt .CompareCount 0}}
+            <a
+                class="clear-compare-main"
+                href="/compare/clear?return=/?page={{.Page}}%26manufacturer={{.SelectedManufacturer}}%26category={{.SelectedCategory}}%26year={{.SelectedYear}}"
+            >
+                Clear comparison
+            </a>
+            {{end}}
         </form>
 
         <main class="container">
             <div class="car-grid">
                 {{$root := .}} {{range .Cars}}
-                <article class="car-card">
+                <article class="car-card" id="car-{{.ID}}">
                     <a
                         href="/specifications/{{.ID}}?page={{$root.Page}}&manufacturer={{$root.SelectedManufacturer}}&category={{$root.SelectedCategory}}&year={{$root.SelectedYear}}"
                         class="card-link"
@@ -74,12 +78,48 @@
                                 alt="{{.Name}}"
                             />
                         </div>
-
-                        <div class="car-info">
-                            <h3>{{.Name}}</h3>
-                            <span class="year">{{.Year}}</span>
-                        </div>
                     </a>
+
+                    <div class="car-info">
+                        <a
+                            class="title-link"
+                            href="/specifications/{{.ID}}?page={{$root.Page}}&manufacturer={{$root.SelectedManufacturer}}&category={{$root.SelectedCategory}}&year={{$root.SelectedYear}}"
+                        >
+                            <h3>{{.Name}}</h3>
+                        </a>
+
+                        <div class="car-meta">
+                            <span class="year">{{.Year}}</span>
+
+                            {{if index $root.CompareIDs .ID}}
+                            <div class="compare-actions">
+                                <a class="compare-btn" href="/compare">
+                                    Go to compare
+                                </a>
+
+                                <a
+                                    class="remove-compare-btn"
+                                    href="/compare/remove/{{.ID}}?page={{$root.Page}}&from=catalog&manufacturer={{$root.SelectedManufacturer}}&category={{$root.SelectedCategory}}&year={{$root.SelectedYear}}"
+                                >
+                                    Remove
+                                </a>
+                            </div>
+                            {{else}} {{if ge $root.CompareCount
+                            $root.MaxCompareCars}}
+                            <a class="compare-btn limit-btn" href="/compare">
+                                You can compare up to {{$root.MaxCompareCars}}
+                                cars
+                            </a>
+                            {{else}}
+                            <a
+                                class="compare-btn"
+                                href="/compare/add/{{.ID}}?page={{$root.Page}}&manufacturer={{$root.SelectedManufacturer}}&category={{$root.SelectedCategory}}&year={{$root.SelectedYear}}"
+                            >
+                                Add to compare
+                            </a>
+                            {{end}} {{end}}
+                        </div>
+                    </div>
                 </article>
                 {{end}}
             </div>
