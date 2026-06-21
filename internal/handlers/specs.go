@@ -22,6 +22,10 @@ type CarWithDetails struct {
 	ManufacturerFilter string
 	CategoryFilter     string
 	YearFilter         string
+
+	IsCompared     bool
+	CompareCount   int
+	MaxCompareCars int
 }
 
 func SpecHandler(tmpl *template.Template) http.HandlerFunc {
@@ -67,6 +71,9 @@ func SpecHandler(tmpl *template.Template) http.HandlerFunc {
 
 		relatedCars := getRelatedCars(data.Cars, car, 10)
 
+		compareIDs := GetCompareIDMap(r)
+		compareList := GetCompareIDs(r)
+
 		specPage := CarWithDetails{
 			Car:          car,
 			Manufacturer: manufacturer,
@@ -77,6 +84,10 @@ func SpecHandler(tmpl *template.Template) http.HandlerFunc {
 			ManufacturerFilter: r.URL.Query().Get("manufacturer"),
 			CategoryFilter:     r.URL.Query().Get("category"),
 			YearFilter:         r.URL.Query().Get("year"),
+
+			IsCompared:     compareIDs[car.ID],
+			CompareCount:   len(compareList),
+			MaxCompareCars: MaxCompareCars,
 		}
 
 		err := tmpl.ExecuteTemplate(w, "car.html", specPage)

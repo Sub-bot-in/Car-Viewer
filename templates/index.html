@@ -53,12 +53,21 @@
             </select>
 
             <button type="submit">Filter</button>
+
+            {{if gt .CompareCount 0}}
+            <a
+                class="clear-compare-main"
+                href="/compare/clear?return=/?page={{.Page}}%26manufacturer={{.SelectedManufacturer}}%26category={{.SelectedCategory}}%26year={{.SelectedYear}}"
+            >
+                Clear comparison
+            </a>
+            {{end}}
         </form>
 
         <main class="container">
             <div class="car-grid">
                 {{$root := .}} {{range .Cars}}
-                <article class="car-card">
+                <article class="car-card" id="car-{{.ID}}">
                     <a
                         href="/specifications/{{.ID}}?page={{$root.Page}}&manufacturer={{$root.SelectedManufacturer}}&category={{$root.SelectedCategory}}&year={{$root.SelectedYear}}"
                         class="card-link"
@@ -69,16 +78,48 @@
                                 alt="{{.Name}}"
                             />
                         </div>
+                    </a>
 
-                        <div class="car-info">
+                    <div class="car-info">
+                        <a
+                            class="title-link"
+                            href="/specifications/{{.ID}}?page={{$root.Page}}&manufacturer={{$root.SelectedManufacturer}}&category={{$root.SelectedCategory}}&year={{$root.SelectedYear}}"
+                        >
                             <h3>{{.Name}}</h3>
+                        </a>
+
+                        <div class="car-meta">
                             <span class="year">{{.Year}}</span>
 
-                            <a class="compare-btn" href="/compare/add/{{.ID}}">
-                                Compare
+                            {{if index $root.CompareIDs .ID}}
+                            <div class="compare-actions">
+                                <a class="compare-btn" href="/compare">
+                                    Go to compare
+                                </a>
+
+                                <a
+                                    class="remove-compare-btn"
+                                    href="/compare/remove/{{.ID}}?page={{$root.Page}}&from=catalog&manufacturer={{$root.SelectedManufacturer}}&category={{$root.SelectedCategory}}&year={{$root.SelectedYear}}"
+                                >
+                                    Remove
+                                </a>
+                            </div>
+                            {{else}} {{if ge $root.CompareCount
+                            $root.MaxCompareCars}}
+                            <a class="compare-btn limit-btn" href="/compare">
+                                You can compare up to {{$root.MaxCompareCars}}
+                                cars
                             </a>
+                            {{else}}
+                            <a
+                                class="compare-btn"
+                                href="/compare/add/{{.ID}}?page={{$root.Page}}&manufacturer={{$root.SelectedManufacturer}}&category={{$root.SelectedCategory}}&year={{$root.SelectedYear}}"
+                            >
+                                Add to compare
+                            </a>
+                            {{end}} {{end}}
                         </div>
-                    </a>
+                    </div>
                 </article>
                 {{end}}
             </div>

@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -13,7 +14,7 @@ import (
 )
 
 const compareCookieName = "compare_cars"
-const maxCompareCars = 4
+const MaxCompareCars = 4
 
 type ComparePageData struct {
 	Cars          []catalog.Model
@@ -25,17 +26,46 @@ func AddToCompareHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := strings.TrimPrefix(r.URL.Path, "/compare/add/")
 
-		ids := getCompareIDs(r)
+		ids := GetCompareIDs(r)
 
-		if !containsID(ids, id) && len(ids) < maxCompareCars {
+		if !containsID(ids, id) && len(ids) < MaxCompareCars {
 			ids = append(ids, id)
 		}
 
 		setCompareCookie(w, ids)
 
-		redirectURL := r.Referer()
-		if redirectURL == "" {
-			redirectURL = "/compare"
+		query := url.Values{}
+
+		page := r.URL.Query().Get("page")
+		if page == "" {
+			page = "1"
+		}
+		query.Set("page", page)
+
+		manufacturer := r.URL.Query().Get("manufacturer")
+		category := r.URL.Query().Get("category")
+		year := r.URL.Query().Get("year")
+
+		if manufacturer != "" {
+			query.Set("manufacturer", manufacturer)
+		}
+
+		if category != "" {
+			query.Set("category", category)
+		}
+
+		if year != "" {
+			query.Set("year", year)
+		}
+
+		from := r.URL.Query().Get("from")
+
+		var redirectURL string
+
+		if from == "details" {
+			redirectURL = "/specifications/" + id + "?" + query.Encode()
+		} else {
+			redirectURL = "/?" + query.Encode() + "#car-" + id
 		}
 
 		http.Redirect(w, r, redirectURL, http.StatusSeeOther)
@@ -46,7 +76,8 @@ func RemoveFromCompareHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := strings.TrimPrefix(r.URL.Path, "/compare/remove/")
 
-		ids := getCompareIDs(r)
+		ids := GetCompareIDs(r)
+
 		var updated []string
 
 		for _, existingID := range ids {
@@ -57,20 +88,62 @@ func RemoveFromCompareHandler() http.HandlerFunc {
 
 		setCompareCookie(w, updated)
 
-		http.Redirect(w, r, "/compare", http.StatusSeeOther)
+		query := url.Values{}
+
+		page := r.URL.Query().Get("page")
+		if page == "" {
+			page = "1"
+		}
+		query.Set("page", page)
+
+		manufacturer := r.URL.Query().Get("manufacturer")
+		category := r.URL.Query().Get("category")
+		year := r.URL.Query().Get("year")
+
+		if manufacturer != "" {
+			query.Set("manufacturer", manufacturer)
+		}
+
+		if category != "" {
+			query.Set("category", category)
+		}
+
+		if year != "" {
+			query.Set("year", year)
+		}
+
+		from := r.URL.Query().Get("from")
+
+		var redirectURL string
+
+		if from == "details" {
+			redirectURL = "/specifications/" + id + "?" + query.Encode()
+		} else if from == "catalog" {
+			redirectURL = "/?" + query.Encode() + "#car-" + id
+		} else {
+			redirectURL = "/compare"
+		}
+
+		http.Redirect(w, r, redirectURL, http.StatusSeeOther)
 	}
 }
 
 func ClearCompareHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		setCompareCookie(w, []string{})
-		http.Redirect(w, r, "/compare", http.StatusSeeOther)
+
+		redirectURL := r.URL.Query().Get("return")
+		if redirectURL == "" {
+			redirectURL = "/compare"
+		}
+
+		http.Redirect(w, r, redirectURL, http.StatusSeeOther)
 	}
 }
 
 func CompareHandler(tmpl *template.Template) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ids := getCompareIDs(r)
+		ids := GetCompareIDs(r)
 
 		data := api.LoadCarsAPI()
 
@@ -109,7 +182,7 @@ func CompareHandler(tmpl *template.Template) http.HandlerFunc {
 	}
 }
 
-func getCompareIDs(r *http.Request) []string {
+func GetCompareIDs(r *http.Request) []string {
 	cookie, err := r.Cookie(compareCookieName)
 	if err != nil || cookie.Value == "" {
 		return []string{}
@@ -154,4 +227,21 @@ func containsID(ids []string, id string) bool {
 	}
 
 	return false
+}
+
+func GetCompareIDMap(r *http.Request) map[int]bool {
+	ids := GetCompareIDs(r)
+
+	result := make(map[int]bool)
+
+	for _, id := range ids {
+		numID, err := strconv.Atoi(id)
+		if err != nil {
+			continue
+		}
+
+		result[numID] = true
+	}
+
+	return result
 }

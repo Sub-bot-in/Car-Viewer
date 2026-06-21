@@ -6,7 +6,7 @@
     </head>
     <body>
         <header class="compare-header">
-            <a href="/">Home</a>
+            <a class="compare-link" href="/"> Home </a>
             <h1>Compare cars</h1>
 
             {{if .Cars}}
@@ -26,9 +26,17 @@
                             alt="{{.Name}}"
                             class="compare-img"
                         />
-                        <h3>{{.Name}}</h3>
-                        <p>{{.Year}}</p>
-                        <a href="/compare/remove/{{.ID}}">Remove</a>
+
+                        <div class="compare-car-info">
+                            <h3>{{.Name}}</h3>
+                            <p>{{.Year}}</p>
+                            <a
+                                class="remove-compare-btn"
+                                href="/compare/remove/{{.ID}}"
+                            >
+                                Remove
+                            </a>
+                        </div>
                     </td>
                     {{end}}
                 </tr>
@@ -95,7 +103,7 @@
         <div class="empty-compare">
             <h2>No cars selected</h2>
             <p>Add cars to compare from the catalog.</p>
-            <a href="/">Go to catalog</a>
+            <a class="compare-link" href="/"> Go to catalog </a>
         </div>
         {{end}}
     </body>

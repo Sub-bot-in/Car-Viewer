@@ -12,17 +12,31 @@
 
         <main class="container car-page">
             <section class="car-details-card">
-                <a
-                    href="/?page={{.Page}}{{if .ManufacturerFilter}}&manufacturer={{.ManufacturerFilter}}{{end}}{{if .CategoryFilter}}&category={{.CategoryFilter}}{{end}}{{if .YearFilter}}&year={{.YearFilter}}{{end}}"
-                    class="back-btn"
-                    >← Back</a
-                >
+                <div class="details-actions">
+                    <a class="back-btn" href="/?page={{.Page}}"> ← Back </a>
 
-                <a class="compare-btn" href="/compare/add/{{.Car.ID}}">
-                    Add to compare
-                </a>
+                    {{if .IsCompared}}
+                    <a class="compare-btn" href="/compare"> Go to compare </a>
 
-                <a class="compare-link" href="/compare"> Go to compare </a>
+                    <a
+                        class="remove-compare-btn"
+                        href="/compare/remove/{{.Car.ID}}?page={{.Page}}&from=details"
+                    >
+                        Remove
+                    </a>
+                    {{else}} {{if ge .CompareCount .MaxCompareCars}}
+                    <a class="compare-btn limit-btn" href="/compare">
+                        You can compare up to {{.MaxCompareCars}} cars.
+                    </a>
+                    {{else}}
+                    <a
+                        class="compare-btn"
+                        href="/compare/add/{{.Car.ID}}?page={{.Page}}&from=details"
+                    >
+                        Add to compare
+                    </a>
+                    {{end}} {{end}}
+                </div>
 
                 <h2>{{.Car.Name}}</h2>
 

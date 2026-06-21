@@ -21,6 +21,10 @@ type PageData struct {
 	SelectedCategory     string
 	SelectedYear         int
 	Years                []int
+
+	CompareIDs     map[int]bool
+	CompareCount   int
+	MaxCompareCars int
 }
 
 type PageLink struct {
