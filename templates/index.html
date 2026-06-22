@@ -46,9 +46,9 @@
             <select name="year">
                 <option value="">All years</option>
                 {{range .Years}}
-                <option value="{{.}}" {{if eq $.SelectedYear .}}selected{{end}}>
-                    {{.}}
-                </option>
+                    <option value="{{.}}" {{if eq $.SelectedYear (printf "%d" .)}}selected{{end}}>
+                        {{.}}
+                    </option>
                 {{end}}
             </select>
 
@@ -61,6 +61,9 @@
             >
                 Clear comparison
             </a>
+            <div class="compare-actions">
+                <a class="compare-btn" href="/compare"> Go to compare </a>
+            </div>
             {{end}}
         </form>
 

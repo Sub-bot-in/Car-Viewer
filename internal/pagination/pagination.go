@@ -19,7 +19,7 @@ type PageData struct {
 
 	SelectedManufacturer string
 	SelectedCategory     string
-	SelectedYear         int
+	SelectedYear         string
 	Years                []int
 
 	CompareIDs     map[int]bool
@@ -122,15 +122,7 @@ func PaginateCars(data *PageData, r *http.Request) {
 
 	data.SelectedManufacturer = manufacturer
 	data.SelectedCategory = category
-
-	year := 0
-
-	if yearStr != "" {
-		year, err := strconv.Atoi(yearStr)
-		if err == nil {
-			data.SelectedYear = year
-		}
-	}
+	data.SelectedYear = yearStr
 
 	filtered := make([]catalog.Model, 0, len(data.Cars))
 
@@ -144,7 +136,7 @@ func PaginateCars(data *PageData, r *http.Request) {
 			continue
 		}
 
-		if year != 0 && car.Year != year {
+		if yearStr != "" && strconv.Itoa(car.Year) != yearStr {
 			continue
 		}
 
