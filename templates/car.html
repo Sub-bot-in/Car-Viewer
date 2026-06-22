@@ -25,8 +25,8 @@
                         Remove
                     </a>
                     {{else}} {{if ge .CompareCount .MaxCompareCars}}
-                    <a class="compare-btn limit-btn" href="/compare">
-                        You can compare up to {{.MaxCompareCars}} cars.
+                    <a class="compare-btn limit-btn">
+                        You can compare up to {{.MaxCompareCars}} cars
                     </a>
                     {{else}}
                     <a
@@ -35,7 +35,14 @@
                     >
                         Add to compare
                     </a>
-                    {{end}} {{end}}
+                    {{end}} {{end}} {{if gt .CompareCount 0}}
+                    <a
+                        class="clear-compare-main"
+                        href="/compare/clear?return=/specifications/{{.Car.ID}}%3Fpage={{.Page}}"
+                    >
+                        Clear comparison
+                    </a>
+                    {{end}}
                 </div>
 
                 <h2>{{.Car.Name}}</h2>
@@ -50,7 +57,6 @@
                 <div class="info-section">
                     <h3>Basic information</h3>
 
-                    <p><strong>Car ID:</strong> {{.Car.ID}}</p>
                     <p><strong>Name:</strong> {{.Car.Name}}</p>
                     <p><strong>Year:</strong> {{.Car.Year}}</p>
                     <p>
@@ -77,7 +83,7 @@
                 </div>
 
                 <div class="info-section">
-                    <h3>Manufacturer "{{.Manufacturer.Name}}"</h3>
+                    <h3>More about "{{.Manufacturer.Name}}"</h3>
 
                     <p>
                         <strong>Founded:</strong>

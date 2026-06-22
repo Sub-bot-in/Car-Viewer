@@ -55,8 +55,8 @@ h1 a:hover {
     --text-black: #000000;
 
     /* Brand */
-    --accent: #2563eb;
-    --accent-hover: #1d4ed8;
+    --accent: #cb8e00;
+    --accent-hover: #b87300;
 
     /* Hero */
     --hero-overlay: #cb8e00;
@@ -573,6 +573,10 @@ body {
     white-space: nowrap;
 
     transition: background var(--transition-fast);
+}
+
+.compare-btn:hover {
+    background: var(--accent-hover);
 }
 
 .compare-link,
