@@ -96,28 +96,52 @@
                 </div>
             </section>
 
-            <aside class="related-cars">
-                <h3>You might be interested</h3>
+            <div class="side-column">
+                <aside class="recently-viewed">
+                    <h3>Recently viewed</h3>
 
-                {{range .RelatedCars}}
-                <a
-                    href="/specifications/{{.ID}}?page={{$.Page}}{{if $.ManufacturerFilter}}&manufacturer={{$.ManufacturerFilter}}{{end}}{{if $.CategoryFilter}}&category={{$.CategoryFilter}}{{end}}{{if $.YearFilter}}&year={{$.YearFilter}}{{end}}"
-                    class="related-card"
-                >
-                    <img
-                        src="http://localhost:3000/api/images/{{.Image}}?w=300"
-                        alt="{{.Name}}"
-                    />
+                    {{range .RecentlyViewed}}
+                    <a
+                        class="related-card"
+                        href="/specifications/{{.ID}}?page={{$.Page}}"
+                    >
+                        <img
+                            src="http://localhost:3000/api/images/{{.Image}}?w=200"
+                            alt="{{.Name}}"
+                        />
 
-                    <div>
-                        <h4>{{.Name}}</h4>
-                        <span class="year">{{.Year}}</span>
-                    </div>
-                </a>
-                {{else}}
-                <p>No similar cars found.</p>
-                {{end}}
-            </aside>
+                        <div>
+                            <h4>{{.Name}}</h4>
+                            <p>{{.Year}}</p>
+                        </div>
+                    </a>
+                    {{else}}
+                    <p>No recently viewed cars yet.</p>
+                    {{end}}
+                </aside>
+                <aside class="related-cars">
+                    <h3>You might be interested</h3>
+
+                    {{range .RelatedCars}}
+                    <a
+                        href="/specifications/{{.ID}}?page={{$.Page}}{{if $.ManufacturerFilter}}&manufacturer={{$.ManufacturerFilter}}{{end}}{{if $.CategoryFilter}}&category={{$.CategoryFilter}}{{end}}{{if $.YearFilter}}&year={{$.YearFilter}}{{end}}"
+                        class="related-card"
+                    >
+                        <img
+                            src="http://localhost:3000/api/images/{{.Image}}?w=300"
+                            alt="{{.Name}}"
+                        />
+
+                        <div>
+                            <h4>{{.Name}}</h4>
+                            <span class="year">{{.Year}}</span>
+                        </div>
+                    </a>
+                    {{else}}
+                    <p>No similar cars found.</p>
+                    {{end}}
+                </aside>
+            </div>
         </main>
     </body>
 </html>
