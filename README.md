@@ -67,16 +67,17 @@ The application expects the cars API to be running at:
 
 ```text
 http://localhost:3000/api
-
 ```
 
 Used API endpoints:
 
 ```text
 GET /api/models
+GET /api/models/{id}
 GET /api/manufacturers
+GET /api/manufacturers/{id}
 GET /api/categories
-GET /api/images/{image}
+GET /api/categories/{id}
 ```
 
 ## Running the Project
@@ -171,10 +172,9 @@ When a user adds a car to comparison, its ID is saved in the cookie.
 If the user already has 4 cars selected, the interface shows a message:
 
 ```text
-You can compare up to 4 cars.
+You can compare up to 4 cars
 ```
 
-This message links to the comparison page.
 
 ## Filtering and Pagination
 
@@ -208,13 +208,3 @@ The current car is excluded from the related list.
 * Static files are served from the `/static/` path.
 * The comparison feature does not require a database.
 * The project is designed as a learning project for practicing Go web development, routing, templates, API fetching, filtering, pagination, and cookies.
-
-## Possible Future Improvements
-
-* Add search by car name
-* Add sorting by year or horsepower
-* Show a message when no cars match selected filters
-* Improve mobile layout
-* Add better error handling for API failures
-* Add loading states with JavaScript
-* Store comparison data in local storage instead of cookies
