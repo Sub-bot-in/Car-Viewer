@@ -26,6 +26,8 @@ type CarWithDetails struct {
 	IsCompared     bool
 	CompareCount   int
 	MaxCompareCars int
+
+	RecentlyViewed []catalog.Model
 }
 
 func SpecHandler(tmpl *template.Template) http.HandlerFunc {
@@ -69,10 +71,15 @@ func SpecHandler(tmpl *template.Template) http.HandlerFunc {
 			}
 		}
 
-		relatedCars := getRelatedCars(data.Cars, car, 10)
+		relatedCars := getRelatedCars(data.Cars, car, 7)
 
 		compareIDs := GetCompareIDMap(r)
 		compareList := GetCompareIDs(r)
+
+		recentIDs := GetRecentlyViewedIDs(r)
+		recentCars := GetRecentlyViewedCars(data.Cars, recentIDs, car.ID)
+
+		AddRecentlyViewed(w, r, id)
 
 		specPage := CarWithDetails{
 			Car:          car,
@@ -88,6 +95,8 @@ func SpecHandler(tmpl *template.Template) http.HandlerFunc {
 			IsCompared:     compareIDs[car.ID],
 			CompareCount:   len(compareList),
 			MaxCompareCars: MaxCompareCars,
+
+			RecentlyViewed: recentCars,
 		}
 
 		err := tmpl.ExecuteTemplate(w, "car.html", specPage)
