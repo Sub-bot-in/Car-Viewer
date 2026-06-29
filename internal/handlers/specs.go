@@ -115,7 +115,7 @@ func getRelatedCars(cars []catalog.Model, currentCar catalog.Model, limit int) [
 			continue
 		}
 
-		if car.ManufacturerID == currentCar.ManufacturerID {
+		if car.ManufacturerID == currentCar.ManufacturerID && car.ID != currentCar.ID {
 			related = append(related, car)
 		}
 	}
