@@ -4,7 +4,6 @@ import (
 	"cars/catalog"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 )
 
@@ -45,23 +44,23 @@ type PageData struct {
 	Categories    []catalog.Categories
 }
 
-func LoadCarsAPI() PageData {
+func LoadCarsAPI() (PageData, error) {
 	var data PageData
 
 	err := FetchJSON(baseURL+"/models", &data.Cars)
 	if err != nil {
-		log.Println(err)
+		return data, err
 	}
 
 	err = FetchJSON(baseURL+"/manufacturers", &data.Manufacturers)
 	if err != nil {
-		log.Println(err)
+		return data, err
 	}
 
 	err = FetchJSON(baseURL+"/categories", &data.Categories)
 	if err != nil {
-		log.Println(err)
+		return data, err
 	}
 
-	return data
+	return data, nil
 }

@@ -34,7 +34,13 @@ func SpecHandler(tmpl *template.Template) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := strings.TrimPrefix(r.URL.Path, "/specifications/")
 
-		data := api.LoadCarsAPI()
+		data, err := api.LoadCarsAPI()
+
+		if err != nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			tmpl.ExecuteTemplate(w, "maintenance.html", nil)
+			return
+		}
 
 		var car catalog.Model
 		var manufacturer catalog.Manufacturers
@@ -99,7 +105,7 @@ func SpecHandler(tmpl *template.Template) http.HandlerFunc {
 			RecentlyViewed: recentCars,
 		}
 
-		err := tmpl.ExecuteTemplate(w, "car.html", specPage)
+		err = tmpl.ExecuteTemplate(w, "car.html", specPage)
 		if err != nil {
 			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)

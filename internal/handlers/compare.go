@@ -145,7 +145,13 @@ func CompareHandler(tmpl *template.Template) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ids := GetCompareIDs(r)
 
-		data := api.LoadCarsAPI()
+		data, err := api.LoadCarsAPI()
+
+		if err != nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			tmpl.ExecuteTemplate(w, "maintenance.html", nil)
+			return
+		}
 
 		var selectedCars []catalog.Model
 
@@ -174,7 +180,7 @@ func CompareHandler(tmpl *template.Template) http.HandlerFunc {
 			Categories:    categoriesMap,
 		}
 
-		err := tmpl.ExecuteTemplate(w, "compare.html", pageData)
+		err = tmpl.ExecuteTemplate(w, "compare.html", pageData)
 		if err != nil {
 			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
