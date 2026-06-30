@@ -44,7 +44,8 @@ func HomeHandler(tmpl *template.Template) http.HandlerFunc {
 
 		for err := range errCh {
 			if err != nil {
-				http.Error(w, err.Error(), 500)
+				w.WriteHeader(http.StatusServiceUnavailable)
+				tmpl.ExecuteTemplate(w, "maintenance.html", nil)
 				return
 			}
 		}
