@@ -16,34 +16,21 @@ func HomeHandler(tmpl *template.Template) http.HandlerFunc {
 		data := pagination.PageData{}
 
 		errCh := make(chan error, 3)
-		doneCh := make(chan struct{}, 3)
 
 		go func() {
-			err := api.FetchJSON(baseURL+"/models", &data.Cars)
-			errCh <- err
-			doneCh <- struct{}{}
+			errCh <- api.FetchJSON(baseURL+"/models", &data.Cars)
 		}()
 
 		go func() {
-			err := api.FetchJSON(baseURL+"/manufacturers", &data.Manufacturers)
-			errCh <- err
-			doneCh <- struct{}{}
+			errCh <- api.FetchJSON(baseURL+"/manufacturers", &data.Manufacturers)
 		}()
 
 		go func() {
-			err := api.FetchJSON(baseURL+"/categories", &data.Categories)
-			errCh <- err
-			doneCh <- struct{}{}
+			errCh <- api.FetchJSON(baseURL+"/categories", &data.Categories)
 		}()
 
 		for i := 0; i < 3; i++ {
-			<-doneCh
-		}
-
-		close(errCh)
-
-		for err := range errCh {
-			if err != nil {
+			if err := <-errCh; err != nil {
 				w.WriteHeader(http.StatusServiceUnavailable)
 				tmpl.ExecuteTemplate(w, "maintenance.html", nil)
 				return

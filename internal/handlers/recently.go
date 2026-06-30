@@ -17,9 +17,9 @@ func GetRecentlyViewedIDs(r *http.Request) (res []string) {
 		return []string{}
 	}
 
-	ids := strings.Split(cookie.Value, ",")
+	cookieIds := strings.Split(cookie.Value, ",")
 
-	for _, id := range ids {
+	for _, id := range cookieIds {
 		id = strings.TrimSpace(id)
 
 		if id != "" {
@@ -31,11 +31,11 @@ func GetRecentlyViewedIDs(r *http.Request) (res []string) {
 }
 
 func AddRecentlyViewed(w http.ResponseWriter, r *http.Request, id string) {
-	ids := GetRecentlyViewedIDs(r)
+	cookieIds := GetRecentlyViewedIDs(r)
 
 	updated := []string{id}
 
-	for _, existingID := range ids {
+	for _, existingID := range cookieIds {
 		if existingID == id {
 			continue
 		}
@@ -56,8 +56,8 @@ func AddRecentlyViewed(w http.ResponseWriter, r *http.Request, id string) {
 		SameSite: http.SameSiteLaxMode,
 	})
 }
-func GetRecentlyViewedCars(cars []catalog.Model, ids []string, currentCarID int) (res []catalog.Model) {
-	for _, id := range ids {
+func GetRecentlyViewedCars(cars []catalog.Model, cookieIds []string, currentCarID int) (res []catalog.Model) {
+	for _, id := range cookieIds {
 		for _, car := range cars {
 			if car.ID == currentCarID {
 				continue
