@@ -45,12 +45,19 @@ func SpecHandler(tmpl *template.Template) http.HandlerFunc {
 		var car catalog.Model
 		var manufacturer catalog.Manufacturers
 		var category catalog.Categories
+		found := false
 
 		for _, c := range data.Cars {
 			if fmt.Sprint(c.ID) == id {
 				car = c
+				found = true
 				break
 			}
+		}
+
+		if !found {
+			http.NotFound(w, r)
+			return
 		}
 
 		for _, c := range data.Manufacturers {

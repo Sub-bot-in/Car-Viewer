@@ -27,8 +27,11 @@ func main() {
 	http.HandleFunc("/compare/clear", handlers.ClearCompareHandler())
 
 	srv := &http.Server{
-		Addr:    ":8080",
-		Handler: nil,
+		Addr:         ":8080",
+		Handler:      nil,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  60 * time.Second,
 	}
 
 	go func() {
