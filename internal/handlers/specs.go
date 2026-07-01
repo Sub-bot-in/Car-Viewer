@@ -38,7 +38,11 @@ func SpecHandler(tmpl *template.Template) http.HandlerFunc {
 
 		if err != nil {
 			w.WriteHeader(http.StatusServiceUnavailable)
-			tmpl.ExecuteTemplate(w, "maintenance.html", nil)
+
+			if err := tmpl.ExecuteTemplate(w, "maintenance.html", nil); err != nil {
+				log.Println(err)
+			}
+
 			return
 		}
 

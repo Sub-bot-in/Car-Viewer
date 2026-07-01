@@ -10,6 +10,7 @@
             <h1>HiveCars</h1>
 
             {{if .Cars}}
+            <!-- if structure is not nil button clear comparison appears -->
             <a class="clear-compare" href="/compare/clear">Clear comparison</a>
             {{end}}
         </header>
@@ -23,7 +24,7 @@
                     <td>
                         <img
                             src="http://localhost:3000/api/images/{{.Image}}?w=300"
-                            alt="{{.Name}}"
+                            alt="{{.Name}}" <!-- text if image fails to load -->
                             class="compare-img"
                         />
 
@@ -45,6 +46,8 @@
                     <th>Manufacturer</th>
                     {{range .Cars}}
                     <td>
+                        <!-- $(root).Manufacturers is a slice of manufacturers from the whole page
+                    with - if found, use it-->
                         {{with index $.Manufacturers
                         .ManufacturerID}}{{.Name}}{{end}}
                     </td>

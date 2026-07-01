@@ -33,7 +33,7 @@ type PageLink struct {
 }
 
 func buildYears(cars []catalog.Model) []int {
-	seen := make(map[int]bool)
+	seen := make(map[int]bool) //to hold unique years
 	var years []int
 
 	for _, car := range cars {
@@ -128,11 +128,11 @@ func PaginateCars(data *PageData, r *http.Request) {
 
 	for _, car := range data.Cars {
 
-		if manufacturer != "" && car.ManufacturerID != parseManufacturerID(data, manufacturer) {
+		if manufacturer != "" && car.ManufacturerID != findManufacturerIDByName(data, manufacturer) {
 			continue
 		}
 
-		if category != "" && car.CategoryID != parseCategoryID(data, category) {
+		if category != "" && car.CategoryID != findCategoryIDByName(data, category) {
 			continue
 		}
 
@@ -187,7 +187,7 @@ func getPageBounds(page, perPage, totalItems int) (int, int) {
 	return start, end
 }
 
-func parseManufacturerID(data *PageData, name string) int {
+func findManufacturerIDByName(data *PageData, name string) int {
 	for _, m := range data.Manufacturers {
 		if m.Name == name {
 			return m.ID
@@ -196,7 +196,7 @@ func parseManufacturerID(data *PageData, name string) int {
 	return 0
 }
 
-func parseCategoryID(data *PageData, name string) int {
+func findCategoryIDByName(data *PageData, name string) int {
 	for _, c := range data.Categories {
 		if c.Name == name {
 			return c.ID
