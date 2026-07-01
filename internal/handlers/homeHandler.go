@@ -29,10 +29,14 @@ func HomeHandler(tmpl *template.Template) http.HandlerFunc {
 			ch <- api.FetchJSON(baseURL+"/categories", &data.Categories)
 		}()
 
-		for i := 0; i < 3; i++ {
+		for i := 0; i < 3; i++ { //program waits when all three API calls are completed
 			if err := <-ch; err != nil {
 				w.WriteHeader(http.StatusServiceUnavailable)
-				tmpl.ExecuteTemplate(w, "maintenance.html", nil)
+
+				if err := tmpl.ExecuteTemplate(w, "maintenance.html", nil); err != nil {
+					log.Println(err)
+				}
+
 				return
 			}
 		}
