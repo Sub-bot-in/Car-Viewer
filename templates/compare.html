@@ -21,10 +21,10 @@
                 <tr>
                     <th>Car</th>
                     {{range .Cars}}
-                    <td>
+                    <td> <!-- text if image fails to load -->
                         <img
                             src="http://localhost:3000/api/images/{{.Image}}?w=300"
-                            alt="{{.Name}}" <!-- text if image fails to load -->
+                            alt="{{.Name}}" 
                             class="compare-img"
                         />
 
