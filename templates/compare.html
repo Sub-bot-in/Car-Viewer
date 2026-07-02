@@ -46,7 +46,7 @@
                     <th>Manufacturer</th>
                     {{range .Cars}}
                     <td>
-                        <!-- $(root).Manufacturers is a slice of manufacturers from the whole page
+                        <!-- $(root).Manufacturers is a map of manufacturers from the whole page
                     with - if found, use it-->
                         {{with index $.Manufacturers
                         .ManufacturerID}}{{.Name}}{{end}}
