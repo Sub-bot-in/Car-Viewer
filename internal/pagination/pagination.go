@@ -71,7 +71,6 @@ func buildPages(currentPage, totalPages int) []PageLink {
 		return pages
 	}
 
-	// Если страниц мало, показываем все
 	if totalPages <= 7 {
 		for i := 1; i <= totalPages; i++ {
 			addPage(i)

@@ -73,6 +73,9 @@
         </form>
 
         <main class="container">
+            {{if not .Cars}}
+            <div class="no-cars">No cars match filter criteria</div>
+            {{end}}
             <div class="car-grid">
                 {{$root := .}} {{range .Cars}}
                 <article class="car-card" id="car-{{.ID}}">
@@ -131,7 +134,7 @@
                 </article>
                 {{end}}
             </div>
-
+            {{if .Cars}}
             <div class="pagination">
                 {{range $root.Pages}} {{if .IsDots}}
                 <span class="dots">...</span>
@@ -146,6 +149,7 @@
                 >
                 {{end}} {{end}} {{end}}
             </div>
+            {{end}}
         </main>
     </body>
 </html>

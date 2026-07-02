@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -94,6 +95,7 @@ func RemoveFromCompareHandler() http.HandlerFunc {
 		if page == "" {
 			page = "1"
 		}
+
 		query.Set("page", page)
 
 		manufacturer := r.URL.Query().Get("manufacturer")
@@ -226,12 +228,9 @@ func setCompareCookie(w http.ResponseWriter, ids []string) {
 }
 
 func containsID(ids []string, id string) bool {
-	for _, existingID := range ids {
-		if existingID == id {
-			return true
-		}
+	if slices.Contains(ids, id) {
+		return true
 	}
-
 	return false
 }
 
